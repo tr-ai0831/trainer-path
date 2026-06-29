@@ -201,7 +201,7 @@
 
 <script>
 // ★★★ ここにGemini APIキーを入れてください ★★★
-const GEMINI_API_KEY = 'AIzaSyAQ.Ab8RN6Lj5qD71E6SjJY7w6ChC8XJzuSRTDUCljzAnkTHTeAXow';
+const GEMINI_API_KEY = "AQ.Ab8RN6Jb2FCTuWgpJntnZTK8ET8C5gHZZ-y1zCVt4HcCFBEoRw";
 
 const STEPS = [
   { key: 'basic', label: '基本情報', question: `はじめまして！**TrainerPath AI** です 💪\n\nあなたに最適なキャリアプランをご提案するため、いくつか質問させてください。\n\nまず**基本情報**を教えてください👇\n\n**年齢：**\n**性別：**\n**住んでいる地域：**\n**最終学歴：**\n**現在の職業：**\n**経験年数：**\n**保有資格：**\n**年収（概算）：**`, hint: '例：30歳・男性・東京・専門卒・パーソナルトレーナー・5年・NSCA-CPT・年収350万', chips: [] },
@@ -318,9 +318,9 @@ async function runAnalysis() {
 具体的な数字・サービス名・手順を含め、親身で率直なトーンで答えてください。`;
 
   try {
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': GEMINI_API_KEY },
       body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { maxOutputTokens: 2048, temperature: 0.7 } })
     });
     const data = await res.json();
