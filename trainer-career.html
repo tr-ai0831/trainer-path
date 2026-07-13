@@ -318,15 +318,15 @@ async function runAnalysis() {
 具体的な数字・サービス名・手順を含め、親身で率直なトーンで答えてください。`;
 
   try {
-    const res = await fetch(`https://api.anthropic.com/v1/messages`, {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-api-key': ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
       body: JSON.stringify({ model: "claude-haiku-4-5", max_tokens: 2048, messages: [{ role: "user", content: prompt }] })
     });
     const data = await res.json();
     document.getElementById('loadingMsg')?.remove();
-    if (data.content?.[0]?.text) {
-      addMessage('✅ **診断完了！** あなた専用のキャリアレポートをお届けします。\n\n' + data.content?.[0]?.text, 'ai');
+    if (data.candidates?.[0]?.content?.parts?.[0]?.text) {
+      addMessage('✅ **診断完了！** あなた専用のキャリアレポートをお届けします。\n\n' + data.candidates[0].content.parts[0].text, 'ai');
     } else {
       console.error('Gemini error:', JSON.stringify(data));
       addMessage('エラーが発生しました。APIキーの設定を確認してください。\n\nエラー詳細: ' + (data.error?.message || JSON.stringify(data)), 'ai');
