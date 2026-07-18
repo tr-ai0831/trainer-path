@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TrainerPath AI｜トレーナーのためのキャリア相談</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --navy: #0D1B2A; --teal: #00C9B1; --gold: #D4A853; --white: #F7F5F0; --charcoal: #2D3748; --muted: #8896A8; --surface: #162232; --chat-bg: #111E2E; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--navy); color: var(--white); font-family: 'Noto Sans JP', sans-serif; line-height: 1.7; min-height: 100vh; }
+  header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 18px 40px; background: rgba(13,27,42,0.88); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,201,177,0.15); }
+  .logo { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 1.3rem; letter-spacing: 0.08em; color: var(--teal); }
+  .logo span { color: var(--gold); }
+  nav a { color: var(--muted); text-decoration: none; font-size: 0.85rem; margin-left: 28px; transition: color 0.2s; }
+  nav a:hover { color: var(--teal); }
+  .btn-start { background: var(--teal); color: var(--navy); font-weight: 700; font-size: 0.85rem; padding: 9px 22px; border-radius: 4px; text-decoration: none; margin-left: 28px; }
+  .hero { min-height: 100vh; display: flex; align-items: center; padding: 120px 40px 80px; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 70% 50%, rgba(0,201,177,0.07) 0%, transparent 70%); pointer-events: none; }
+  .hero-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+  .hero-eyebrow { font-size: 0.75rem; letter-spacing: 0.25em; color: var(--teal); text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+  .hero-eyebrow::before { content: ''; display: block; width: 32px; height: 1px; background: var(--teal); }
+  .hero h1 { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: clamp(2.2rem, 4vw, 3.4rem); line-height: 1.15; margin-bottom: 24px; }
+  .hero h1 em { font-style: normal; background: linear-gradient(90deg, var(--teal), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .hero-sub { font-size: 1rem; color: #a8b8c8; line-height: 1.8; max-width: 420px; margin-bottom: 36px; }
+  .hero-cta { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+  .btn-primary { background: var(--teal); color: var(--navy); font-weight: 700; font-size: 0.95rem; padding: 14px 32px; border-radius: 4px; text-decoration: none; cursor: pointer; border: none; display: inline-block; }
+  .hero-note { font-size: 0.8rem; color: var(--muted); }
+  .preview-card { background: var(--surface); border: 1px solid rgba(0,201,177,0.2); border-radius: 12px; padding: 28px; position: relative; }
+  .preview-card::before { content: ''; position: absolute; top: -1px; left: 24px; right: 24px; height: 2px; background: linear-gradient(90deg, var(--teal), var(--gold)); }
+  .preview-label { font-size: 0.7rem; letter-spacing: 0.2em; color: var(--teal); text-transform: uppercase; margin-bottom: 18px; }
+  .preview-step { display: flex; gap: 12px; margin-bottom: 16px; align-items: flex-start; }
+  .step-num { width: 28px; height: 28px; border-radius: 50%; background: rgba(0,201,177,0.12); border: 1px solid rgba(0,201,177,0.3); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; color: var(--teal); flex-shrink: 0; }
+  .step-num.active { background: var(--teal); color: var(--navy); }
+  .step-text { font-size: 0.85rem; color: #a8b8c8; }
+  .step-text strong { color: var(--white); font-weight: 500; display: block; }
+  .preview-result { margin-top: 20px; padding: 16px; background: rgba(0,201,177,0.06); border-radius: 8px; border-left: 2px solid var(--teal); }
+  .preview-result p { font-size: 0.82rem; color: #c8d8e8; line-height: 1.6; }
+  .result-tag { display: inline-block; background: var(--teal); color: var(--navy); font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 2px; margin-bottom: 8px; }
+  .section { padding: 100px 40px; border-top: 1px solid rgba(255,255,255,0.06); }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+  .section-label { font-size: 0.75rem; letter-spacing: 0.25em; color: var(--teal); text-transform: uppercase; margin-bottom: 16px; }
+  .section h2 { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: clamp(1.8rem, 3vw, 2.5rem); margin-bottom: 16px; line-height: 1.2; }
+  .section-desc { color: var(--muted); max-width: 520px; margin-bottom: 56px; font-size: 0.95rem; }
+  .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; }
+  .step-card { background: var(--surface); border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 28px 24px; transition: border-color 0.2s, transform 0.2s; }
+  .step-card:hover { border-color: rgba(0,201,177,0.3); transform: translateY(-3px); }
+  .step-card-num { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 3rem; color: rgba(0,201,177,0.12); line-height: 1; margin-bottom: 16px; }
+  .step-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 8px; }
+  .step-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+  .output-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+  .output-item { background: var(--surface); border-radius: 8px; padding: 20px; border: 1px solid rgba(255,255,255,0.07); display: flex; gap: 14px; align-items: flex-start; }
+  .output-icon { width: 36px; height: 36px; border-radius: 8px; background: rgba(0,201,177,0.1); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+  .output-item h4 { font-size: 0.88rem; font-weight: 700; margin-bottom: 4px; }
+  .output-item p { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+  #chat-section { padding: 80px 40px 120px; background: var(--chat-bg); border-top: 1px solid rgba(0,201,177,0.15); }
+  .chat-wrapper { max-width: 860px; margin: 0 auto; }
+  .chat-header { text-align: center; margin-bottom: 40px; }
+  .chat-header h2 { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: clamp(1.6rem, 3vw, 2.2rem); margin-bottom: 10px; }
+  .chat-header p { color: var(--muted); font-size: 0.9rem; }
+  .progress-bar { display: flex; align-items: center; justify-content: center; margin-bottom: 36px; overflow-x: auto; padding: 4px 0; }
+  .prog-step { display: flex; flex-direction: column; align-items: center; gap: 6px; flex-shrink: 0; }
+  .prog-dot { width: 32px; height: 32px; border-radius: 50%; background: var(--surface); border: 2px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; color: var(--muted); transition: all 0.3s; }
+  .prog-dot.done { background: var(--teal); border-color: var(--teal); color: var(--navy); }
+  .prog-dot.active { background: var(--navy); border-color: var(--teal); color: var(--teal); box-shadow: 0 0 0 4px rgba(0,201,177,0.15); }
+  .prog-label { font-size: 0.6rem; color: var(--muted); white-space: nowrap; text-align: center; max-width: 60px; line-height: 1.3; }
+  .prog-label.active { color: var(--teal); }
+  .prog-line { width: 36px; height: 2px; background: rgba(255,255,255,0.1); margin-top: -22px; flex-shrink: 0; transition: background 0.3s; }
+  .prog-line.done { background: var(--teal); }
+  .chat-window { background: var(--surface); border: 1px solid rgba(0,201,177,0.2); border-radius: 12px; overflow: hidden; }
+  .chat-topbar { background: rgba(0,0,0,0.2); padding: 14px 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+  .chat-avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--teal), var(--gold)); display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+  .chat-title { font-size: 0.88rem; font-weight: 700; }
+  .chat-status { font-size: 0.72rem; color: var(--teal); }
+  .chat-messages { height: 460px; overflow-y: auto; padding: 24px 20px; display: flex; flex-direction: column; gap: 16px; scroll-behavior: smooth; }
+  .chat-messages::-webkit-scrollbar { width: 4px; }
+  .chat-messages::-webkit-scrollbar-thumb { background: rgba(0,201,177,0.3); border-radius: 2px; }
+  .msg { display: flex; gap: 12px; max-width: 88%; }
+  .msg.ai { align-self: flex-start; }
+  .msg.user { align-self: flex-end; flex-direction: row-reverse; }
+  .msg-avatar { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; background: linear-gradient(135deg, var(--teal), var(--gold)); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; margin-top: 2px; }
+  .msg.user .msg-avatar { background: rgba(255,255,255,0.1); }
+  .msg-bubble { background: rgba(0,0,0,0.25); border-radius: 12px; padding: 12px 16px; font-size: 0.88rem; line-height: 1.7; color: #d0dce8; border: 1px solid rgba(255,255,255,0.07); }
+  .msg.user .msg-bubble { background: rgba(0,201,177,0.12); border-color: rgba(0,201,177,0.2); color: var(--white); border-radius: 12px 4px 12px 12px; }
+  .msg.ai .msg-bubble { border-radius: 4px 12px 12px 12px; }
+  .msg-bubble strong { color: var(--teal); }
+  .chat-input-area { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.07); background: rgba(0,0,0,0.15); }
+  .input-row { display: flex; gap: 10px; align-items: flex-end; }
+  .chat-textarea { flex: 1; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 12px 16px; color: var(--white); font-family: 'Noto Sans JP', sans-serif; font-size: 0.88rem; resize: none; outline: none; min-height: 48px; max-height: 140px; line-height: 1.6; transition: border-color 0.2s; }
+  .chat-textarea:focus { border-color: rgba(0,201,177,0.4); }
+  .chat-textarea::placeholder { color: var(--muted); }
+  .send-btn { width: 44px; height: 44px; border-radius: 8px; background: var(--teal); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--navy); font-size: 1rem; }
+  .send-btn:disabled { background: var(--charcoal); cursor: not-allowed; }
+  .input-hint { font-size: 0.72rem; color: var(--muted); margin-top: 8px; }
+  .quick-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+  .chip { background: rgba(0,201,177,0.08); border: 1px solid rgba(0,201,177,0.25); color: var(--teal); font-size: 0.78rem; padding: 5px 12px; border-radius: 20px; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; }
+  .typing { display: flex; gap: 5px; align-items: center; padding: 8px 0; }
+  .typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: bounce 1.2s infinite; }
+  .typing span:nth-child(2) { animation-delay: 0.2s; }
+  .typing span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-6px); opacity: 1; } }
+  .reset-btn { background: transparent; border: 1px solid rgba(255,255,255,0.15); color: var(--muted); padding: 8px 16px; border-radius: 4px; font-size: 0.8rem; cursor: pointer; margin-top: 20px; font-family: 'Noto Sans JP', sans-serif; }
+  footer { text-align: center; padding: 40px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 0.78rem; color: var(--muted); }
+  footer a { color: var(--teal); text-decoration: none; }
+  @media (max-width: 768px) { header { padding: 14px 20px; } nav { display: none; } .hero { padding: 100px 20px 60px; } .hero-grid { grid-template-columns: 1fr; } .preview-card { display: none; } .section { padding: 70px 20px; } #chat-section { padding: 60px 20px 80px; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Trainer<span>Path</span> AI</div>
+  <nav><a href="#how">使い方</a><a href="#output">得られること</a><a href="#chat-section">相談する</a></nav>
+  <a href="#chat-section" class="btn-start">無料で相談する</a>
+</header>
+
+<section class="hero">
+  <div class="hero-grid">
+    <div>
+      <div class="hero-eyebrow">AI キャリアアドバイザー</div>
+      <h1>あなたの強みで、<br><em>最高のキャリア</em>を<br>見つけよう。</h1>
+      <p class="hero-sub">パーソナルトレーナー・スポーツインストラクターのための、AIによる本格キャリア診断。11の質問に答えるだけで、あなたに最適なキャリアプランと具体的な行動計画が手に入ります。</p>
+      <div class="hero-cta"><a href="#chat-section" class="btn-primary">今すぐ相談する →</a><span class="hero-note">無料・登録不要</span></div>
+    </div>
+    <div class="preview-card">
+      <div class="preview-label">📊 診断レポートサンプル</div>
+      <div class="preview-step"><div class="step-num active">✓</div><div class="step-text"><strong>基本情報・経歴の分析完了</strong>業界歴5年、NSCA-CPT保有</div></div>
+      <div class="preview-step"><div class="step-num active">✓</div><div class="step-text"><strong>現在の市場価値を算出</strong>月商35〜50万円相当のポテンシャル</div></div>
+      <div class="preview-step"><div class="step-num">3</div><div class="step-text"><strong>キャリア候補を提示中…</strong>あなたの強みに最適な3つの方向性</div></div>
+      <div class="preview-result"><span class="result-tag">第1候補</span><p>オンラインパーソナル×SNS集客モデル。あなたの接客力と専門性を活かし、3年以内に月収100万円超を狙えるルートです。</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="how">
+  <div class="section-inner">
+    <div class="section-label">使い方</div>
+    <h2>4ステップで<br>キャリアが見える</h2>
+    <p class="section-desc">複雑なことは一切不要。チャット形式で質問に答えるだけで、あなたの現状と未来を分析します。</p>
+    <div class="steps-grid">
+      <div class="step-card"><div class="step-card-num">01</div><h3>基本情報を入力</h3><p>年齢・経験・資格・年収などを教えてください。</p></div>
+      <div class="step-card"><div class="step-card-num">02</div><h3>経歴・悩みを共有</h3><p>これまでのキャリアと今の課題を詳しく話してください。</p></div>
+      <div class="step-card"><div class="step-card-num">03</div><h3>強み・価値観を整理</h3><p>得意なこと、大切にしたいこと、興味ある分野を選びます。</p></div>
+      <div class="step-card"><div class="step-card-num">04</div><h3>AIがプランを提示</h3><p>分析結果とキャリア候補、具体的な行動計画を受け取ります。</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="output">
+  <div class="section-inner">
+    <div class="section-label">得られること</div>
+    <h2>10項目の<br>本格キャリア診断</h2>
+    <p class="section-desc">曖昧なアドバイスではなく、あなた専用のデータに基づいた具体的な提案をお届けします。</p>
+    <div class="output-grid">
+      <div class="output-item"><div class="output-icon">📊</div><div><h4>現状分析</h4><p>スキル・市場価値を客観評価</p></div></div>
+      <div class="output-item"><div class="output-icon">💎</div><div><h4>市場価値</h4><p>今のあなたの価値を数値化</p></div></div>
+      <div class="output-item"><div class="output-icon">📈</div><div><h4>将来予測</h4><p>5年・10年後の市場変化</p></div></div>
+      <div class="output-item"><div class="output-icon">🤖</div><div><h4>AI代替リスク</h4><p>なくならない仕事を明確化</p></div></div>
+      <div class="output-item"><div class="output-icon">🚀</div><div><h4>伸びる分野</h4><p>今後成長するマーケットを提示</p></div></div>
+      <div class="output-item"><div class="output-icon">🎯</div><div><h4>キャリア候補</h4><p>あなた向けの3つの方向性</p></div></div>
+      <div class="output-item"><div class="output-icon">🛠️</div><div><h4>習得スキル</h4><p>優先順位付きで3年計画</p></div></div>
+      <div class="output-item"><div class="output-icon">💰</div><div><h4>年収シミュレーション</h4><p>現在〜10年後を複数パターンで</p></div></div>
+      <div class="output-item"><div class="output-icon">📅</div><div><h4>行動計画</h4><p>今日から3年の具体的ステップ</p></div></div>
+      <div class="output-item"><div class="output-icon">💬</div><div><h4>率直な提案</h4><p>「私だったらこうする」を明示</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="chat-section">
+  <div class="chat-wrapper">
+    <div class="chat-header">
+      <div class="section-label" style="justify-content:center;display:flex;">AI キャリア相談</div>
+      <h2>キャリア相談を<br>はじめよう</h2>
+      <p>下のチャットで質問に順番に答えてください。最後に詳細な診断レポートをお届けします。</p>
+    </div>
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="chat-window">
+      <div class="chat-topbar">
+        <div class="chat-avatar">🤖</div>
+        <div><div class="chat-title">TrainerPath AI</div><div class="chat-status">● オンライン</div></div>
+      </div>
+      <div class="chat-messages" id="chatMessages"></div>
+      <div class="chat-input-area">
+        <div class="quick-chips" id="quickChips"></div>
+        <div class="input-row">
+          <textarea class="chat-textarea" id="chatInput" placeholder="ここに入力してください…" rows="1"></textarea>
+          <button class="send-btn" id="sendBtn" onclick="handleSend()">➤</button>
+        </div>
+        <div class="input-hint" id="inputHint">Enterで送信（Shift+Enterで改行）</div>
+      </div>
+    </div>
+    <button class="reset-btn" onclick="resetChat()">🔄 最初からやり直す</button>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 TrainerPath AI — <a href="#">プライバシーポリシー</a> · <a href="#">お問い合わせ</a></p>
+  <p style="margin-top:8px;">本サービスはAIによる参考情報の提供です。重要な判断は専門家にご相談ください。</p>
+</footer>
+
+<script>
+// ★★★ ここにGemini APIキーを入れてください ★★★
+
+
+const STEPS = [
+  { key: 'basic', label: '基本情報', question: `はじめまして！**TrainerPath AI** です 💪\n\nあなたに最適なキャリアプランをご提案するため、いくつか質問させてください。\n\nまず**基本情報**を教えてください👇\n\n**年齢：**\n**性別：**\n**住んでいる地域：**\n**最終学歴：**\n**現在の職業：**\n**経験年数：**\n**保有資格：**\n**年収（概算）：**`, hint: '例：30歳・男性・東京・専門卒・パーソナルトレーナー・5年・NSCA-CPT・年収350万', chips: [] },
+  { key: 'career', label: '経歴', question: `ありがとうございます！\n\n次に、**これまでの経歴**をできるだけ詳しく教えてください。`, hint: '例：新卒でスポーツジムに入社→3年後にパーソナルジムへ転職…', chips: [] },
+  { key: 'worries', label: '悩み', question: `なるほど！\n\n今、**どんな悩みを感じていますか？** 当てはまるものを選ぶか、自由に書いてください。`, hint: '複数選択OK・自由記入もできます', chips: ['収入が上がらない', '独立するか迷う', '転職したい', 'AIで仕事がなくなる不安', '専門性がない', '何を勉強すべきか不明', 'キャリアの方向性が見えない'] },
+  { key: 'future', label: '将来の目標', question: `**将来どうなりたいか**を教えてください！\n\n**5年後：**\n**10年後：**\n**人生で実現したいこと：**`, hint: '例：5年後は独立してオンラインで活動、10年後は自分のジムを経営したい', chips: [] },
+  { key: 'strengths', label: '強み', question: `**あなたの強み**を教えてください。\n\n**技術面：**\n**性格：**\n**実績：**\n**人脈：**`, hint: '思いつくことを素直に書いてください', chips: [] },
+  { key: 'weaknesses', label: '弱み', question: `正直に教えてください。\n\n**自分の弱み・苦手なこと**は何ですか？`, hint: '弱みを知ることでより的確な提案ができます', chips: ['営業・集客が苦手', 'SNSが続かない', '経営・お金の知識がない', '自己発信が苦手', '継続が難しい', '専門知識が偏っている'] },
+  { key: 'interests', label: '興味分野', question: `**興味がある分野**を教えてください。当てはまるものをすべて選んでください。`, hint: '複数選択してください', chips: ['パーソナルジム', '整体', 'ピラティス', 'ストレングス', 'スポーツチーム', 'プロスポーツ', '医療', 'リハビリ', '高齢者', '子供', '女性専門', 'ボディメイク', 'ダイエット', 'ゴルフ', 'ランニング', 'SNS発信', 'YouTube', 'AI活用', 'オンライン事業', '教育', 'セミナー'] },
+  { key: 'skills', label: 'スキル評価', question: `現在の**スキルを10点満点**で自己評価してください👇\n\n**トレーニング指導：**\n**接客：**\n**営業：**\n**SNS：**\n**マーケティング：**\n**経営：**\n**マネジメント：**\n**英語：**\n**AI活用：**\n**データ分析：**`, hint: '例：トレーニング指導：8、接客：7、営業：4…', chips: [] },
+  { key: 'values', label: '価値観', question: `仕事で**大切にしたい価値観**は何ですか？`, hint: '複数選択OK', chips: ['お金・収入', '自由・裁量', '安定', '社会貢献', 'スポーツへの情熱', '家族との時間', '挑戦・成長', '教育・人材育成', '研究・探求', '影響力・発信'] },
+  { key: 'constraints', label: '制約・条件', question: `**制約や条件**はありますか？`, hint: '例：転勤不可・副業OK・独立資金100万円・週50時間まで', chips: ['転勤不可', '副業OK', '家族優先', '独立資金あり（100万以上）', '独立資金少ない（〜50万）', '週40時間以内', '週60時間以上働ける'] },
+  { key: 'question', label: '相談内容', question: `最後の質問です！\n\n今回、**特に相談したいこと**を具体的に書いてください。\n\n（例：独立すべきか？SNSで集客するには？AIにどう対応すべきか？）`, hint: '詳しく書くほど、精度の高い提案ができます', chips: [] }
+];
+
+let currentStep = 0, answers = {}, isWaiting = false, selectedChips = [];
+
+function renderProgress() {
+  const bar = document.getElementById('progressBar');
+  bar.innerHTML = '';
+  STEPS.forEach((s, i) => {
+    const el = document.createElement('div');
+    el.className = 'prog-step';
+    const done = i < currentStep, active = i === currentStep;
+    el.innerHTML = `<div class="prog-dot ${done?'done':''} ${active?'active':''}">${done?'✓':(i+1)}</div><div class="prog-label ${active?'active':''}">${s.label}</div>`;
+    bar.appendChild(el);
+    if (i < STEPS.length - 1) { const l = document.createElement('div'); l.className = `prog-line ${done?'done':''}`; bar.appendChild(l); }
+  });
+}
+
+function addMessage(text, role='ai', isLoading=false) {
+  const c = document.getElementById('chatMessages');
+  const msg = document.createElement('div');
+  msg.className = `msg ${role}`;
+  if (isLoading) msg.id = 'loadingMsg';
+  const fmt = isLoading ? `<div class="typing"><span></span><span></span><span></span></div>` : text.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+  msg.innerHTML = `<div class="msg-avatar">${role==='ai'?'🤖':'👤'}</div><div class="msg-bubble">${fmt}</div>`;
+  c.appendChild(msg); c.scrollTop = c.scrollHeight;
+}
+
+function renderChips(chips) {
+  selectedChips = [];
+  const c = document.getElementById('quickChips');
+  c.innerHTML = '';
+  (chips||[]).forEach(chip => {
+    const el = document.createElement('button');
+    el.className = 'chip'; el.textContent = chip;
+    el.onclick = () => {
+      const on = el.dataset.on === '1';
+      el.dataset.on = on ? '0' : '1';
+      el.style.background = on ? '' : 'var(--teal)';
+      el.style.color = on ? 'var(--teal)' : 'var(--navy)';
+      el.style.fontWeight = on ? '' : '700';
+      selectedChips = on ? selectedChips.filter(c=>c!==chip) : [...selectedChips, chip];
+    };
+    c.appendChild(el);
+  });
+}
+
+function askQuestion(i) {
+  if (i >= STEPS.length) { runAnalysis(); return; }
+  const s = STEPS[i];
+  setTimeout(() => { addMessage(s.question,'ai'); renderChips(s.chips); document.getElementById('chatInput').placeholder = s.hint||'ここに入力してください…'; }, 400);
+}
+
+function handleSend() {
+  if (isWaiting) return;
+  const inp = document.getElementById('chatInput');
+  let txt = inp.value.trim();
+  if (selectedChips.length) txt = selectedChips.join('、') + (txt ? '\n'+txt : '');
+  if (!txt) return;
+  inp.value = ''; inp.style.height = 'auto';
+  document.getElementById('quickChips').innerHTML = ''; selectedChips = [];
+  addMessage(txt,'user');
+  answers[STEPS[currentStep].key] = txt;
+  currentStep++; renderProgress();
+  if (currentStep >= STEPS.length) {
+    isWaiting = true;
+    document.getElementById('sendBtn').disabled = true;
+    document.getElementById('chatInput').disabled = true;
+    addMessage('','ai',true);
+    runAnalysis();
+  } else { askQuestion(currentStep); }
+}
+
+async function runAnalysis() {
+  const prompt = `あなたはパーソナルトレーナー・スポーツインストラクター専門のキャリアアドバイザーです。以下のクライアント情報をもとに、詳細なキャリア診断レポートを日本語で作成してください。
+
+【クライアント情報】
+基本情報：${answers.basic||'未回答'}
+経歴：${answers.career||'未回答'}
+悩み：${answers.worries||'未回答'}
+将来の目標：${answers.future||'未回答'}
+強み：${answers.strengths||'未回答'}
+弱み：${answers.weaknesses||'未回答'}
+興味分野：${answers.interests||'未回答'}
+スキル評価：${answers.skills||'未回答'}
+価値観：${answers.values||'未回答'}
+制約：${answers.constraints||'未回答'}
+相談内容：${answers.question||'未回答'}
+
+【回答形式】以下の順番で具体的に回答してください：
+①現状分析
+②市場価値（具体的な数値で）
+③5年後・10年後の市場価値変化
+④AIによる代替リスク分析
+⑤今後伸びる分野
+⑥おすすめキャリア（第1〜3候補・理由・年収目安）
+⑦今後3年で身につけるべきスキル（優先順位付き）
+⑧年収シミュレーション（現在・3年後・5年後・10年後を複数パターン）
+⑨具体的行動計画（今日から・3ヶ月・半年・1年・3年）
+⑩「私だったらこうする」率直な提案
+
+具体的な数字・サービス名・手順を含め、親身で率直なトーンで答えてください。`;
+
+  try {
+    const res = await fetch("/api/chat", {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: "claude-haiku-4-5", max_tokens: 2048, messages: [{ role: "user", content: prompt }] })
+    });
+    const data = await res.json();
+    document.getElementById('loadingMsg')?.remove();
+    if (data.candidates?.[0]?.content?.parts?.[0]?.text) {
+      addMessage('✅ **診断完了！** あなた専用のキャリアレポートをお届けします。\n\n' + data.candidates[0].content.parts[0].text, 'ai');
+    } else {
+      console.error('Gemini error:', JSON.stringify(data));
+      addMessage('エラーが発生しました。APIキーの設定を確認してください。\n\nエラー詳細: ' + (data.error?.message || JSON.stringify(data)), 'ai');
+    }
+  } catch(e) {
+    document.getElementById('loadingMsg')?.remove();
+    addMessage('通信エラーが発生しました。ページを再読み込みしてもう一度お試しください。', 'ai');
+    console.error(e);
+  } finally {
+    isWaiting = false;
+    document.getElementById('sendBtn').disabled = false;
+    document.getElementById('chatInput').disabled = false;
+    renderChips([]);
+    document.getElementById('chatInput').placeholder = '追加の質問があればどうぞ…';
+    document.getElementById('inputHint').textContent = '診断結果について質問があればどうぞ';
+    currentStep = 999;
+  }
+}
+
+document.getElementById('chatInput').addEventListener('input', function() { this.style.height='auto'; this.style.height=Math.min(this.scrollHeight,140)+'px'; });
+document.getElementById('chatInput').addEventListener('keydown', function(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();handleSend();} });
+
+function resetChat() {
+  currentStep=0; answers={}; selectedChips=[]; isWaiting=false;
+  document.getElementById('chatMessages').innerHTML='';
+  document.getElementById('quickChips').innerHTML='';
+  const inp=document.getElementById('chatInput');
+  inp.value=''; inp.disabled=false; inp.style.height='auto';
+  document.getElementById('sendBtn').disabled=false;
+  document.getElementById('inputHint').textContent='Enterで送信（Shift+Enterで改行）';
+  renderProgress(); askQuestion(0);
+}
+
+renderProgress(); askQuestion(0);
+</script>
+</body>
+</html>
