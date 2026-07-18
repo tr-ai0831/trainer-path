@@ -325,8 +325,8 @@ async function runAnalysis() {
     });
     const data = await res.json();
     document.getElementById('loadingMsg')?.remove();
-    if (data.candidates?.[0]?.content?.parts?.[0]?.text) {
-      addMessage('✅ **診断完了！** あなた専用のキャリアレポートをお届けします。\n\n' + data.candidates[0].content.parts[0].text, 'ai');
+    if (data.content?.[0]?.text) {
+      addMessage('✅ **診断完了！** あなた専用のキャリアレポートをお届けします。\n\n' + data.content[0].text, 'ai');
     } else {
       console.error('Gemini error:', JSON.stringify(data));
       addMessage('エラーが発生しました。APIキーの設定を確認してください。\n\nエラー詳細: ' + (data.error?.message || JSON.stringify(data)), 'ai');
