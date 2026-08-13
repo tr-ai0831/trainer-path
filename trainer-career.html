@@ -3,364 +3,1186 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TrainerPath AI｜トレーナーのためのキャリア相談</title>
+<title>ホネさん診断 - 改訂版</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root { --navy: #0D1B2A; --teal: #00C9B1; --gold: #D4A853; --white: #F7F5F0; --charcoal: #2D3748; --muted: #8896A8; --surface: #162232; --chat-bg: #111E2E; }
-  html { scroll-behavior: smooth; }
-  body { background: var(--navy); color: var(--white); font-family: 'Noto Sans JP', sans-serif; line-height: 1.7; min-height: 100vh; }
-  header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 18px 40px; background: rgba(13,27,42,0.88); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,201,177,0.15); }
-  .logo { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 1.3rem; letter-spacing: 0.08em; color: var(--teal); }
-  .logo span { color: var(--gold); }
-  nav a { color: var(--muted); text-decoration: none; font-size: 0.85rem; margin-left: 28px; transition: color 0.2s; }
-  nav a:hover { color: var(--teal); }
-  .btn-start { background: var(--teal); color: var(--navy); font-weight: 700; font-size: 0.85rem; padding: 9px 22px; border-radius: 4px; text-decoration: none; margin-left: 28px; }
-  .hero { min-height: 100vh; display: flex; align-items: center; padding: 120px 40px 80px; position: relative; overflow: hidden; }
-  .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 70% 50%, rgba(0,201,177,0.07) 0%, transparent 70%); pointer-events: none; }
-  .hero-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
-  .hero-eyebrow { font-size: 0.75rem; letter-spacing: 0.25em; color: var(--teal); text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-  .hero-eyebrow::before { content: ''; display: block; width: 32px; height: 1px; background: var(--teal); }
-  .hero h1 { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: clamp(2.2rem, 4vw, 3.4rem); line-height: 1.15; margin-bottom: 24px; }
-  .hero h1 em { font-style: normal; background: linear-gradient(90deg, var(--teal), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .hero-sub { font-size: 1rem; color: #a8b8c8; line-height: 1.8; max-width: 420px; margin-bottom: 36px; }
-  .hero-cta { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
-  .btn-primary { background: var(--teal); color: var(--navy); font-weight: 700; font-size: 0.95rem; padding: 14px 32px; border-radius: 4px; text-decoration: none; cursor: pointer; border: none; display: inline-block; }
-  .hero-note { font-size: 0.8rem; color: var(--muted); }
-  .preview-card { background: var(--surface); border: 1px solid rgba(0,201,177,0.2); border-radius: 12px; padding: 28px; position: relative; }
-  .preview-card::before { content: ''; position: absolute; top: -1px; left: 24px; right: 24px; height: 2px; background: linear-gradient(90deg, var(--teal), var(--gold)); }
-  .preview-label { font-size: 0.7rem; letter-spacing: 0.2em; color: var(--teal); text-transform: uppercase; margin-bottom: 18px; }
-  .preview-step { display: flex; gap: 12px; margin-bottom: 16px; align-items: flex-start; }
-  .step-num { width: 28px; height: 28px; border-radius: 50%; background: rgba(0,201,177,0.12); border: 1px solid rgba(0,201,177,0.3); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; color: var(--teal); flex-shrink: 0; }
-  .step-num.active { background: var(--teal); color: var(--navy); }
-  .step-text { font-size: 0.85rem; color: #a8b8c8; }
-  .step-text strong { color: var(--white); font-weight: 500; display: block; }
-  .preview-result { margin-top: 20px; padding: 16px; background: rgba(0,201,177,0.06); border-radius: 8px; border-left: 2px solid var(--teal); }
-  .preview-result p { font-size: 0.82rem; color: #c8d8e8; line-height: 1.6; }
-  .result-tag { display: inline-block; background: var(--teal); color: var(--navy); font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 2px; margin-bottom: 8px; }
-  .section { padding: 100px 40px; border-top: 1px solid rgba(255,255,255,0.06); }
-  .section-inner { max-width: 1100px; margin: 0 auto; }
-  .section-label { font-size: 0.75rem; letter-spacing: 0.25em; color: var(--teal); text-transform: uppercase; margin-bottom: 16px; }
-  .section h2 { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: clamp(1.8rem, 3vw, 2.5rem); margin-bottom: 16px; line-height: 1.2; }
-  .section-desc { color: var(--muted); max-width: 520px; margin-bottom: 56px; font-size: 0.95rem; }
-  .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; }
-  .step-card { background: var(--surface); border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 28px 24px; transition: border-color 0.2s, transform 0.2s; }
-  .step-card:hover { border-color: rgba(0,201,177,0.3); transform: translateY(-3px); }
-  .step-card-num { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 3rem; color: rgba(0,201,177,0.12); line-height: 1; margin-bottom: 16px; }
-  .step-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 8px; }
-  .step-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
-  .output-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
-  .output-item { background: var(--surface); border-radius: 8px; padding: 20px; border: 1px solid rgba(255,255,255,0.07); display: flex; gap: 14px; align-items: flex-start; }
-  .output-icon { width: 36px; height: 36px; border-radius: 8px; background: rgba(0,201,177,0.1); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
-  .output-item h4 { font-size: 0.88rem; font-weight: 700; margin-bottom: 4px; }
-  .output-item p { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
-  #chat-section { padding: 80px 40px 120px; background: var(--chat-bg); border-top: 1px solid rgba(0,201,177,0.15); }
-  .chat-wrapper { max-width: 860px; margin: 0 auto; }
-  .chat-header { text-align: center; margin-bottom: 40px; }
-  .chat-header h2 { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: clamp(1.6rem, 3vw, 2.2rem); margin-bottom: 10px; }
-  .chat-header p { color: var(--muted); font-size: 0.9rem; }
-  .progress-bar { display: flex; align-items: center; justify-content: center; margin-bottom: 36px; overflow-x: auto; padding: 4px 0; }
-  .prog-step { display: flex; flex-direction: column; align-items: center; gap: 6px; flex-shrink: 0; }
-  .prog-dot { width: 32px; height: 32px; border-radius: 50%; background: var(--surface); border: 2px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; color: var(--muted); transition: all 0.3s; }
-  .prog-dot.done { background: var(--teal); border-color: var(--teal); color: var(--navy); }
-  .prog-dot.active { background: var(--navy); border-color: var(--teal); color: var(--teal); box-shadow: 0 0 0 4px rgba(0,201,177,0.15); }
-  .prog-label { font-size: 0.6rem; color: var(--muted); white-space: nowrap; text-align: center; max-width: 60px; line-height: 1.3; }
-  .prog-label.active { color: var(--teal); }
-  .prog-line { width: 36px; height: 2px; background: rgba(255,255,255,0.1); margin-top: -22px; flex-shrink: 0; transition: background 0.3s; }
-  .prog-line.done { background: var(--teal); }
-  .chat-window { background: var(--surface); border: 1px solid rgba(0,201,177,0.2); border-radius: 12px; overflow: hidden; }
-  .chat-topbar { background: rgba(0,0,0,0.2); padding: 14px 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.07); }
-  .chat-avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--teal), var(--gold)); display: flex; align-items: center; justify-content: center; font-size: 1rem; }
-  .chat-title { font-size: 0.88rem; font-weight: 700; }
-  .chat-status { font-size: 0.72rem; color: var(--teal); }
-  .chat-messages { height: 460px; overflow-y: auto; padding: 24px 20px; display: flex; flex-direction: column; gap: 16px; scroll-behavior: smooth; }
-  .chat-messages::-webkit-scrollbar { width: 4px; }
-  .chat-messages::-webkit-scrollbar-thumb { background: rgba(0,201,177,0.3); border-radius: 2px; }
-  .msg { display: flex; gap: 12px; max-width: 88%; }
-  .msg.ai { align-self: flex-start; }
-  .msg.user { align-self: flex-end; flex-direction: row-reverse; }
-  .msg-avatar { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; background: linear-gradient(135deg, var(--teal), var(--gold)); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; margin-top: 2px; }
-  .msg.user .msg-avatar { background: rgba(255,255,255,0.1); }
-  .msg-bubble { background: rgba(0,0,0,0.25); border-radius: 12px; padding: 12px 16px; font-size: 0.88rem; line-height: 1.7; color: #d0dce8; border: 1px solid rgba(255,255,255,0.07); }
-  .msg.user .msg-bubble { background: rgba(0,201,177,0.12); border-color: rgba(0,201,177,0.2); color: var(--white); border-radius: 12px 4px 12px 12px; }
-  .msg.ai .msg-bubble { border-radius: 4px 12px 12px 12px; }
-  .msg-bubble strong { color: var(--teal); }
-  .chat-input-area { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.07); background: rgba(0,0,0,0.15); }
-  .input-row { display: flex; gap: 10px; align-items: flex-end; }
-  .chat-textarea { flex: 1; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 12px 16px; color: var(--white); font-family: 'Noto Sans JP', sans-serif; font-size: 0.88rem; resize: none; outline: none; min-height: 48px; max-height: 140px; line-height: 1.6; transition: border-color 0.2s; }
-  .chat-textarea:focus { border-color: rgba(0,201,177,0.4); }
-  .chat-textarea::placeholder { color: var(--muted); }
-  .send-btn { width: 44px; height: 44px; border-radius: 8px; background: var(--teal); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--navy); font-size: 1rem; }
-  .send-btn:disabled { background: var(--charcoal); cursor: not-allowed; }
-  .input-hint { font-size: 0.72rem; color: var(--muted); margin-top: 8px; }
-  .quick-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
-  .chip { background: rgba(0,201,177,0.08); border: 1px solid rgba(0,201,177,0.25); color: var(--teal); font-size: 0.78rem; padding: 5px 12px; border-radius: 20px; cursor: pointer; font-family: 'Noto Sans JP', sans-serif; }
-  .typing { display: flex; gap: 5px; align-items: center; padding: 8px 0; }
-  .typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: bounce 1.2s infinite; }
-  .typing span:nth-child(2) { animation-delay: 0.2s; }
-  .typing span:nth-child(3) { animation-delay: 0.4s; }
-  @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-6px); opacity: 1; } }
-  .reset-btn { background: transparent; border: 1px solid rgba(255,255,255,0.15); color: var(--muted); padding: 8px 16px; border-radius: 4px; font-size: 0.8rem; cursor: pointer; margin-top: 20px; font-family: 'Noto Sans JP', sans-serif; }
-  footer { text-align: center; padding: 40px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 0.78rem; color: var(--muted); }
-  footer a { color: var(--teal); text-decoration: none; }
-  @media (max-width: 768px) { header { padding: 14px 20px; } nav { display: none; } .hero { padding: 100px 20px 60px; } .hero-grid { grid-template-columns: 1fr; } .preview-card { display: none; } .section { padding: 70px 20px; } #chat-section { padding: 60px 20px 80px; } }
+  :root{
+    --bg:#FAF5EC; --ink:#26242B; --orange:#FF6A3D; --blue:#5B7FBE;
+    --pink:#F4A6C6; --teal:#4FA898; --green:#6FA97A; --gold:#D8A400; --card:#FFFFFF; --line:#E7DFD0;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink); font-family:'Noto Sans JP', sans-serif;
+    display:flex; justify-content:center; padding:32px 16px 80px;
+  }
+  .app{ width:100%; max-width:480px; }
+  .brand{ text-align:center; margin-bottom:16px; }
+  .brand .kicker{ font-size:12px; letter-spacing:0.15em; color:var(--orange); font-weight:700; }
+  .brand h1{ font-family:'Zen Maru Gothic', sans-serif; font-weight:900; font-size:21px; margin:4px 0 0; }
+
+  .phase-label{ text-align:center; font-size:11px; font-weight:700; color:#9A9284; margin-bottom:6px; letter-spacing:.05em; }
+  .sub-label{ text-align:center; font-size:13px; font-weight:700; color:var(--ink); margin-bottom:10px; min-height:18px; }
+  .progress{ display:flex; gap:2px; margin:0 0 22px; flex-wrap:wrap; }
+  .progress .dot{ flex:1; min-width:3px; height:6px; border-radius:99px; background:var(--line); transition:background .3s; }
+  .progress .dot.done.p1{ background:var(--pink); }
+  .progress .dot.done.p2{ background:var(--teal); }
+  .progress .dot.done.value{ background:var(--orange); }
+  .progress .dot.done.vision{ background:var(--blue); }
+
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:20px;
+    padding:24px 20px 20px; box-shadow:0 10px 30px rgba(38,36,43,0.06);
+  }
+  .mascot-wrap{ display:flex; justify-content:center; margin-bottom:8px; height:100px; align-items:center; }
+  .mascot-wrap img{ max-height:100px; max-width:120px; object-fit:contain; animation: pop .35s ease; }
+  @keyframes pop{ from{ transform:scale(.85); opacity:0; } to{ transform:scale(1); opacity:1; } }
+
+  .time-badge{ display:block; width:fit-content; margin:0 auto 14px; background:#FFF1E5; color:var(--orange); font-weight:900; font-size:13px; padding:8px 16px; border-radius:99px; }
+  .remaining-badge{ display:block; width:fit-content; margin:0 auto 10px; background:var(--ink); color:#fff; font-weight:900; font-size:12px; padding:6px 14px; border-radius:99px; letter-spacing:.03em; }
+  .intuition-hint{ text-align:center; font-size:12.5px; color:#8A8478; background:#F7F3EA; border-radius:10px; padding:8px 10px; margin:0 0 16px; }
+  .intuition-hint.small{ font-size:11px; padding:6px 8px; margin:8px 0 14px; }
+
+  .qnum{ text-align:center; font-size:12px; color:#9A9284; font-weight:700; letter-spacing:0.1em; }
+  .question{
+    font-family:'Zen Maru Gothic', sans-serif; font-weight:700; font-size:17px;
+    text-align:center; margin:8px 0 12px; line-height:1.5;
+  }
+  .answers{ display:flex; flex-direction:column; gap:9px; margin-top:14px; }
+  .answer{
+    display:flex; align-items:center; gap:12px; border:1.5px solid var(--line);
+    background:#FFFDF9; border-radius:14px; padding:10px 14px; cursor:pointer;
+    transition: border-color .15s, transform .1s, background .15s; text-align:left;
+  }
+  .answer:hover{ border-color:var(--orange); background:#FFF6EF; }
+  .answer:active{ transform:scale(0.98); }
+  .answer img{ width:34px; height:34px; object-fit:contain; flex-shrink:0; }
+  .answer span{ font-size:13.5px; font-weight:500; line-height:1.4; }
+
+  .info-text{ font-size:14px; line-height:1.9; color:#4A4640; margin:0 0 14px; }
+  .info-box{
+    background:#F7F3EA; border-radius:14px; padding:14px 16px; margin-bottom:16px; font-size:13px; line-height:1.8; color:#4A4640;
+  }
+  .info-box .row{ margin-bottom:6px; }
+  .info-box .row b{ color:var(--ink); }
+  .next-btn{
+    display:block; width:100%; padding:12px; border-radius:14px; border:none;
+    background:var(--ink); color:#fff; font-weight:700; font-size:14px; cursor:pointer;
+    font-family:'Noto Sans JP', sans-serif;
+  }
+
+  .result h2{
+    font-family:'Zen Maru Gothic', sans-serif; font-weight:900; font-size:19px;
+    text-align:center; margin:4px 0 14px;
+  }
+  .start-point{ text-align:center; font-size:12px; color:#8A8478; margin-bottom:10px; }
+  .start-point b{ color:var(--ink); }
+
+  .radar-section{ margin:10px 0 18px; }
+  .radar-title{ font-size:11px; font-weight:700; color:#8A8478; letter-spacing:.05em; margin-bottom:2px; text-align:center; }
+
+  .bridge{
+    font-size:13px; line-height:1.8; color:#4A4640; background:#FDF1E7;
+    border-left:3px solid var(--orange); padding:10px 12px; border-radius:8px; margin-bottom:16px;
+  }
+  .result p{ font-size:13.5px; line-height:1.85; color:#4A4640; margin:0 0 10px; }
+
+  .badge-block{ border-radius:16px; padding:16px; margin:16px 0; }
+  .badge-block.strength{ background:linear-gradient(135deg,#FFF6DC,#FFFDF6); border:2px solid #F0D27A; }
+  .badge-block.weak{ background:linear-gradient(135deg,#FFEFEA,#FFFBF9); border:2px solid #F3B39E; }
+  .badge-header{ display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+  .badge-icon{ width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:21px; flex-shrink:0; background:#fff; box-shadow:0 2px 6px rgba(0,0,0,0.08); }
+  .badge-title-wrap{ flex:1; }
+  .badge-label{ font-size:13px; font-weight:900; letter-spacing:.02em; }
+  .badge-label.strength{ color:#B8860B; }
+  .badge-label.weak{ color:#C0503A; }
+  .badge-title{ font-family:'Zen Maru Gothic', sans-serif; font-weight:900; font-size:16px; color:var(--ink); margin-top:2px; }
+  .badge-score{ font-size:11px; font-weight:700; color:#8A8478; }
+  .prep p{ margin:0 0 10px; font-size:13px; line-height:1.9; }
+
+  .tree{ margin: 14px 0 18px; }
+  .tree-title{ font-size:11px; font-weight:700; color:#8A8478; letter-spacing:.05em; margin-bottom:10px; }
+  .tree-axis{ font-size:13px; font-weight:900; margin:10px 0 4px; font-family:'Zen Maru Gothic', sans-serif; }
+  .tree-axis.value{ color:var(--orange); }
+  .tree-axis.vision{ color:var(--blue); }
+  .tree-group{ font-size:11.5px; font-weight:700; color:#8A8478; margin:6px 0 3px 10px; }
+  .tree-sub{ font-size:10.5px; font-weight:700; color:#B0A899; margin:4px 0 2px 20px; }
+  .tree-subsub{ font-size:10px; font-weight:700; color:#C4BCAD; margin:3px 0 2px 30px; }
+  .leaf-row{ display:flex; align-items:center; gap:7px; margin:3px 0; }
+  .leaf-name{ font-size:10.5px; font-weight:600; width:70px; flex-shrink:0; color:#4A4640; }
+  .leaf-track{ flex:1; height:5px; background:#F0ECE2; border-radius:99px; overflow:hidden; }
+  .leaf-fill{ height:100%; border-radius:99px; }
+  .leaf-fill.value{ background:var(--orange); opacity:.5; }
+  .leaf-fill.vision{ background:var(--blue); opacity:.5; }
+  .leaf-fill.core{ background:#D64545; opacity:1; }
+  .leaf-fill.top{ background:var(--gold); opacity:1; }
+  .leaf-row.core .leaf-name{ color:#D64545; font-weight:900; }
+  .leaf-row.top .leaf-name{ color:#B8860B; font-weight:900; }
+  .leaf-score{ font-size:9.5px; font-weight:800; color:#8A8478; width:28px; text-align:right; flex-shrink:0; }
+
+  .next-step{ background:#F7F3EA; border-radius:14px; padding:14px 16px; margin-bottom:12px; }
+  .next-step .label{ font-size:11px; font-weight:700; color:var(--orange); letter-spacing:.05em; margin-bottom:6px; display:block; }
+  .next-step p{ margin:0; font-size:13px; line-height:1.8; color:#4A4640; }
+  .universal-box{ background:#EEF5EC; border-radius:14px; padding:14px 16px; margin-bottom:16px; border:1px dashed #B7D2B4; }
+  .universal-box .label{ font-size:11px; font-weight:700; color:var(--green); letter-spacing:.05em; margin-bottom:6px; display:block; }
+  .universal-box p{ margin:0; font-size:12.5px; line-height:1.8; color:#4A4640; }
+
+  .objectivity-box{
+    background:#FFFBEF; border:1.5px dashed #E8CE7A; border-radius:14px; padding:14px 15px; margin:16px 0; }
+  .objectivity-box .otitle{ font-size:12px; font-weight:900; color:#B8860B; margin-bottom:6px; display:flex; align-items:center; gap:6px; }
+  .objectivity-box p{ margin:0 0 8px; font-size:12.5px; line-height:1.85; color:#4A4640; }
+  .objectivity-box p:last-child{ margin-bottom:0; }
+
+  .tool-list{ margin:0; padding:0; list-style:none; }
+  .tool-item{ margin-bottom:10px; }
+  .tool-item:last-child{ margin-bottom:0; }
+  .tool-name{ font-weight:900; font-size:12.5px; color:var(--ink); display:block; margin-bottom:2px; }
+  .tool-howto{ font-size:12px; line-height:1.7; color:#4A4640; margin:0; }
+
+  .freeform-field{ margin-bottom:14px; }
+  .freeform-field label{ display:block; font-size:12px; font-weight:700; color:#8A8478; margin-bottom:6px; }
+  .freeform-field input, .freeform-field select, .freeform-field textarea{
+    width:100%; border:1.5px solid var(--line); border-radius:10px; padding:9px 12px; font-size:13.5px;
+    font-family:'Noto Sans JP', sans-serif; background:#FFFDF9; color:var(--ink);
+  }
+  .freeform-field textarea{ resize:vertical; }
+
+  .future-box{ background:#F3EEFB; border:1.5px solid #D9CBF0; border-radius:14px; padding:14px 16px; margin:16px 0; }
+  .future-box .ftitle{ font-size:12px; font-weight:900; color:#8A63C4; margin-bottom:8px; }
+  .future-box p{ margin:0 0 8px; font-size:12.5px; line-height:1.8; color:#4A4640; font-style:italic; }
+  .future-box .fnote{ font-style:normal; }
+
+  .loading-spinner{ width:36px; height:36px; border:4px solid #F0ECE2; border-top-color:var(--orange); border-radius:50%; margin:24px auto; animation:spin 0.8s linear infinite; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  .ai-badge{ display:inline-block; background:#8A63C4; color:#fff; font-size:9px; font-weight:900; padding:2px 8px; border-radius:99px; vertical-align:middle; margin-left:4px; }
+
+  .restart{
+    display:block; width:100%; padding:12px; border-radius:14px; border:none;
+    background:var(--ink); color:#fff; font-weight:700; font-size:14px; cursor:pointer;
+    font-family:'Noto Sans JP', sans-serif;
+  }
+  .note{ margin-top:22px; font-size:11px; color:#B0A899; text-align:center; line-height:1.7; }
 </style>
 </head>
 <body>
-
-<header>
-  <div class="logo">Trainer<span>Path</span> AI</div>
-  <nav><a href="#how">使い方</a><a href="#output">得られること</a><a href="#chat-section">相談する</a></nav>
-  <a href="#chat-section" class="btn-start">無料で相談する</a>
-</header>
-
-<section class="hero">
-  <div class="hero-grid">
-    <div>
-      <div class="hero-eyebrow">AI キャリアアドバイザー</div>
-      <h1>あなたの強みで、<br><em>最高のキャリア</em>を<br>見つけよう。</h1>
-      <p class="hero-sub">パーソナルトレーナー・スポーツインストラクターのための、AIによる本格キャリア診断。11の質問に答えるだけで、あなたに最適なキャリアプランと具体的な行動計画が手に入ります。</p>
-      <div class="hero-cta"><a href="#chat-section" class="btn-primary">今すぐ相談する →</a><span class="hero-note">無料・登録不要</span></div>
-    </div>
-    <div class="preview-card">
-      <div class="preview-label">📊 診断レポートサンプル</div>
-      <div class="preview-step"><div class="step-num active">✓</div><div class="step-text"><strong>基本情報・経歴の分析完了</strong>業界歴5年、NSCA-CPT保有</div></div>
-      <div class="preview-step"><div class="step-num active">✓</div><div class="step-text"><strong>現在の市場価値を算出</strong>月商35〜50万円相当のポテンシャル</div></div>
-      <div class="preview-step"><div class="step-num">3</div><div class="step-text"><strong>キャリア候補を提示中…</strong>あなたの強みに最適な3つの方向性</div></div>
-      <div class="preview-result"><span class="result-tag">第1候補</span><p>オンラインパーソナル×SNS集客モデル。あなたの接客力と専門性を活かし、3年以内に月収100万円超を狙えるルートです。</p></div>
-    </div>
+<div class="app">
+  <div class="brand">
+    <span class="kicker">TRAINER CAREER DOJO</span>
+    <h1>ホネさん診断: 本質発見ルート</h1>
   </div>
-</section>
 
-<section class="section" id="how">
-  <div class="section-inner">
-    <div class="section-label">使い方</div>
-    <h2>4ステップで<br>キャリアが見える</h2>
-    <p class="section-desc">複雑なことは一切不要。チャット形式で質問に答えるだけで、あなたの現状と未来を分析します。</p>
-    <div class="steps-grid">
-      <div class="step-card"><div class="step-card-num">01</div><h3>基本情報を入力</h3><p>年齢・経験・資格・年収などを教えてください。</p></div>
-      <div class="step-card"><div class="step-card-num">02</div><h3>経歴・悩みを共有</h3><p>これまでのキャリアと今の課題を詳しく話してください。</p></div>
-      <div class="step-card"><div class="step-card-num">03</div><h3>強み・価値観を整理</h3><p>得意なこと、大切にしたいこと、興味ある分野を選びます。</p></div>
-      <div class="step-card"><div class="step-card-num">04</div><h3>AIがプランを提示</h3><p>分析結果とキャリア候補、具体的な行動計画を受け取ります。</p></div>
-    </div>
-  </div>
-</section>
+  <div class="phase-label" id="phaseLabel"></div>
+  <div class="sub-label" id="subLabel"></div>
+  <div class="progress" id="progress"></div>
 
-<section class="section" id="output">
-  <div class="section-inner">
-    <div class="section-label">得られること</div>
-    <h2>10項目の<br>本格キャリア診断</h2>
-    <p class="section-desc">曖昧なアドバイスではなく、あなた専用のデータに基づいた具体的な提案をお届けします。</p>
-    <div class="output-grid">
-      <div class="output-item"><div class="output-icon">📊</div><div><h4>現状分析</h4><p>スキル・市場価値を客観評価</p></div></div>
-      <div class="output-item"><div class="output-icon">💎</div><div><h4>市場価値</h4><p>今のあなたの価値を数値化</p></div></div>
-      <div class="output-item"><div class="output-icon">📈</div><div><h4>将来予測</h4><p>5年・10年後の市場変化</p></div></div>
-      <div class="output-item"><div class="output-icon">🤖</div><div><h4>AI代替リスク</h4><p>なくならない仕事を明確化</p></div></div>
-      <div class="output-item"><div class="output-icon">🚀</div><div><h4>伸びる分野</h4><p>今後成長するマーケットを提示</p></div></div>
-      <div class="output-item"><div class="output-icon">🎯</div><div><h4>キャリア候補</h4><p>あなた向けの3つの方向性</p></div></div>
-      <div class="output-item"><div class="output-icon">🛠️</div><div><h4>習得スキル</h4><p>優先順位付きで3年計画</p></div></div>
-      <div class="output-item"><div class="output-icon">💰</div><div><h4>年収シミュレーション</h4><p>現在〜10年後を複数パターンで</p></div></div>
-      <div class="output-item"><div class="output-icon">📅</div><div><h4>行動計画</h4><p>今日から3年の具体的ステップ</p></div></div>
-      <div class="output-item"><div class="output-icon">💬</div><div><h4>率直な提案</h4><p>「私だったらこうする」を明示</p></div></div>
-    </div>
-  </div>
-</section>
+  <div class="card" id="card"></div>
 
-<section id="chat-section">
-  <div class="chat-wrapper">
-    <div class="chat-header">
-      <div class="section-label" style="justify-content:center;display:flex;">AI キャリア相談</div>
-      <h2>キャリア相談を<br>はじめよう</h2>
-      <p>下のチャットで質問に順番に答えてください。最後に詳細な診断レポートをお届けします。</p>
-    </div>
-    <div class="progress-bar" id="progressBar"></div>
-    <div class="chat-window">
-      <div class="chat-topbar">
-        <div class="chat-avatar">🤖</div>
-        <div><div class="chat-title">TrainerPath AI</div><div class="chat-status">● オンライン</div></div>
-      </div>
-      <div class="chat-messages" id="chatMessages"></div>
-      <div class="chat-input-area">
-        <div class="quick-chips" id="quickChips"></div>
-        <div class="input-row">
-          <textarea class="chat-textarea" id="chatInput" placeholder="ここに入力してください…" rows="1"></textarea>
-          <button class="send-btn" id="sendBtn" onclick="handleSend()">➤</button>
-        </div>
-        <div class="input-hint" id="inputHint">Enterで送信（Shift+Enterで改行）</div>
-      </div>
-    </div>
-    <button class="reset-btn" onclick="resetChat()">🔄 最初からやり直す</button>
-  </div>
-</section>
-
-<footer>
-  <p>© 2026 TrainerPath AI — <a href="#">プライバシーポリシー</a> · <a href="#">お問い合わせ</a></p>
-  <p style="margin-top:8px;">本サービスはAIによる参考情報の提供です。重要な判断は専門家にご相談ください。</p>
-</footer>
+  <div class="note">※ ラフ試作です。所要時間表示、残り問題数の強調、5点満点のレーダーチャート、客観的評価の推奨コメントを反映しています。</div>
+</div>
 
 <script>
-// ★★★ ここにGemini APIキーを入れてください ★★★
+// ============================
+// 画像プール
+// ============================
+const scorePool = {
+  3: ['25','15','03','24','27','12'],
+  2: ['30','19','34','05','10','11'],
+  1: ['26','09','32','08','16','01'],
+  0: ['29','13','17','20','18','04']
+};
+function scoreImg(score, seed){
+  const pool = scorePool[score];
+  return 'assets/' + pool[seed % pool.length] + '.jpg';
+}
+const headerPool = ['28','35','14','33','31','06','07','02','01','19','17','09'];
+function headerImg(i){ return 'assets/' + headerPool[i % headerPool.length] + '.jpg'; }
 
+// ============================
+// PHASE 1: キャリアの悩み
+// ============================
+const concernQ = {
+  q: "今、キャリアについて一番気になっているのはどれ?",
+  mascot: "assets/17.jpg",
+  answers: [
+    { text: "独立・開業したい", img: "assets/25.jpg", value: "independence", label: "独立したい" },
+    { text: "転職・環境を変えたい", img: "assets/01.jpg", value: "job_change", label: "環境を変えたい" },
+    { text: "スキルアップ・専門性を高めたい", img: "assets/31.jpg", value: "skill_up", label: "スキルを上げたい" },
+    { text: "人間関係(職場・お客様)に悩んでいる", img: "assets/09.jpg", value: "relationship", label: "人間関係の悩み" },
+    { text: "給与・待遇に不満がある", img: "assets/20.jpg", value: "compensation", label: "待遇への不満" },
+    { text: "将来に対して、漠然とした不安がある", img: "assets/26.jpg", value: "vague", label: "漠然とした不安" }
+  ]
+};
+const idealQ = {
+  q: "本当は、どうしたい?",
+  mascot: "assets/07.jpg",
+  answers: [
+    { text: "今の場所で、もっと力を発揮したい", img: "assets/30.jpg", value: "grow_here", label: "今の場所で力を発揮したい" },
+    { text: "新しい環境で、もう一度挑戦したい", img: "assets/12.jpg", value: "new_place", label: "新しい環境に挑戦したい" },
+    { text: "自分の裁量で、自由に働きたい", img: "assets/25.jpg", value: "own_way", label: "自分の裁量で働きたい" },
+    { text: "一旦立ち止まって、じっくり考えたい", img: "assets/19.jpg", value: "pause", label: "立ち止まって考えたい" },
+    { text: "今の生活を、無理なく安定させたい", img: "assets/11.jpg", value: "stabilize", label: "無理なく安定させたい" }
+  ]
+};
 
-const STEPS = [
-  { key: 'basic', label: '基本情報', question: `はじめまして！**TrainerPath AI** です 💪\n\nあなたに最適なキャリアプランをご提案するため、いくつか質問させてください。\n\nまず**基本情報**を教えてください👇\n\n**年齢：**\n**性別：**\n**住んでいる地域：**\n**最終学歴：**\n**現在の職業：**\n**経験年数：**\n**保有資格：**\n**年収（概算）：**`, hint: '例：30歳・男性・東京・専門卒・パーソナルトレーナー・5年・NSCA-CPT・年収350万', chips: [] },
-  { key: 'career', label: '経歴', question: `ありがとうございます！\n\n次に、**これまでの経歴**をできるだけ詳しく教えてください。`, hint: '例：新卒でスポーツジムに入社→3年後にパーソナルジムへ転職…', chips: [] },
-  { key: 'worries', label: '悩み', question: `なるほど！\n\n今、**どんな悩みを感じていますか？** 当てはまるものを選ぶか、自由に書いてください。`, hint: '複数選択OK・自由記入もできます', chips: ['収入が上がらない', '独立するか迷う', '転職したい', 'AIで仕事がなくなる不安', '専門性がない', '何を勉強すべきか不明', 'キャリアの方向性が見えない'] },
-  { key: 'future', label: '将来の目標', question: `**将来どうなりたいか**を教えてください！\n\n**5年後：**\n**10年後：**\n**人生で実現したいこと：**`, hint: '例：5年後は独立してオンラインで活動、10年後は自分のジムを経営したい', chips: [] },
-  { key: 'strengths', label: '強み', question: `**あなたの強み**を教えてください。\n\n**技術面：**\n**性格：**\n**実績：**\n**人脈：**`, hint: '思いつくことを素直に書いてください', chips: [] },
-  { key: 'weaknesses', label: '弱み', question: `正直に教えてください。\n\n**自分の弱み・苦手なこと**は何ですか？`, hint: '弱みを知ることでより的確な提案ができます', chips: ['営業・集客が苦手', 'SNSが続かない', '経営・お金の知識がない', '自己発信が苦手', '継続が難しい', '専門知識が偏っている'] },
-  { key: 'interests', label: '興味分野', question: `**興味がある分野**を教えてください。当てはまるものをすべて選んでください。`, hint: '複数選択してください', chips: ['パーソナルジム', '整体', 'ピラティス', 'ストレングス', 'スポーツチーム', 'プロスポーツ', '医療', 'リハビリ', '高齢者', '子供', '女性専門', 'ボディメイク', 'ダイエット', 'ゴルフ', 'ランニング', 'SNS発信', 'YouTube', 'AI活用', 'オンライン事業', '教育', 'セミナー'] },
-  { key: 'skills', label: 'スキル評価', question: `現在の**スキルを10点満点**で自己評価してください👇\n\n**トレーニング指導：**\n**接客：**\n**営業：**\n**SNS：**\n**マーケティング：**\n**経営：**\n**マネジメント：**\n**英語：**\n**AI活用：**\n**データ分析：**`, hint: '例：トレーニング指導：8、接客：7、営業：4…', chips: [] },
-  { key: 'values', label: '価値観', question: `仕事で**大切にしたい価値観**は何ですか？`, hint: '複数選択OK', chips: ['お金・収入', '自由・裁量', '安定', '社会貢献', 'スポーツへの情熱', '家族との時間', '挑戦・成長', '教育・人材育成', '研究・探求', '影響力・発信'] },
-  { key: 'constraints', label: '制約・条件', question: `**制約や条件**はありますか？`, hint: '例：転勤不可・副業OK・独立資金100万円・週50時間まで', chips: ['転勤不可', '副業OK', '家族優先', '独立資金あり（100万以上）', '独立資金少ない（〜50万）', '週40時間以内', '週60時間以上働ける'] },
-  { key: 'question', label: '相談内容', question: `最後の質問です！\n\n今回、**特に相談したいこと**を具体的に書いてください。\n\n（例：独立すべきか？SNSで集客するには？AIにどう対応すべきか？）`, hint: '詳しく書くほど、精度の高い提案ができます', chips: [] }
+// ============================
+// PHASE 2: 現状把握
+// ============================
+const workQ = {
+  q: "今の仕事は、正直どんな状態?",
+  mascot: "assets/28.jpg",
+  answers: [
+    { text: "忙しいけど充実している", img: "assets/27.jpg", label: "忙しいが充実" },
+    { text: "正直、しんどい・限界に近い", img: "assets/33.jpg", label: "しんどい・限界近い" },
+    { text: "落ち着いているが、物足りなさもある", img: "assets/01.jpg", label: "落ち着いているが物足りない" },
+    { text: "悪くはないが、この先が見えない", img: "assets/17.jpg", label: "この先が見えない" }
+  ]
+};
+const lifeQ = {
+  q: "プライベート・家庭とのバランスは?",
+  mascot: "assets/02.jpg",
+  answers: [
+    { text: "しっかり両立できている", img: "assets/15.jpg", label: "しっかり両立できている" },
+    { text: "なんとか両立できている", img: "assets/30.jpg", label: "なんとか両立できている" },
+    { text: "仕事優先になりがち", img: "assets/32.jpg", label: "仕事優先になりがち" },
+    { text: "プライベートをかなり犠牲にしている", img: "assets/29.jpg", label: "プライベートを犠牲にしている" }
+  ]
+};
+
+// ============================
+// PHASE 3: 課題発見(31項目診断)
+// ============================
+const leafQuestions = [
+  { key:'verbal', cluster:'jiatama', label:'言語力',
+    q:"言葉で情報を扱う時", answers:[
+      {text:"話や文章の要点を、瞬時に掴んで整理できる", score:3},
+      {text:"時間をかければ、要点を整理できる", score:2},
+      {text:"話が長いと、要点を見失いやすい", score:1},
+      {text:"言葉で説明されると、理解に時間がかかる", score:0}
+    ]},
+  { key:'numeric', cluster:'jiatama', label:'数的処理力',
+    q:"数字やデータを扱う時", answers:[
+      {text:"数字やデータから、すぐに傾向や意味を読み取れる", score:3},
+      {text:"時間をかければ、数字から意味を読み取れる", score:2},
+      {text:"数字を見ても、あまりピンとこない", score:1},
+      {text:"数字を扱うこと自体が苦手", score:0}
+    ]},
+  { key:'logical', cluster:'jiatama', label:'論理的思考力',
+    q:"物事を筋道立てて考える力について", answers:[
+      {text:"複雑な問題も、筋道立てて整理し、結論を出せる", score:3},
+      {text:"基本的な筋道は立てられる", score:2},
+      {text:"考えがまとまらず、堂々巡りになりやすい", score:1},
+      {text:"論理立てて考えること自体が苦手", score:0}
+    ]},
+  { key:'creative', cluster:'jiatama', label:'創造的思考力',
+    q:"既存のやり方にとらわれず考える力について", answers:[
+      {text:"前例を疑い、新しい仮説や発想を生み出せる", score:3},
+      {text:"求められれば、新しい発想も出せる", score:2},
+      {text:"基本的には、前例に沿って考えることが多い", score:1},
+      {text:"新しい発想を考えること自体に苦手意識がある", score:0}
+    ]},
+  { key:'affinity', cluster:'competency', label:'親和力',
+    q:"初対面の人やお客様との関わり方", answers:[
+      {text:"自然に打ち解け、信頼関係をすぐに築ける", score:3},
+      {text:"時間をかければ、信頼関係を築ける", score:2},
+      {text:"打ち解けるまでに、かなり時間がかかる", score:1},
+      {text:"人と距離を縮めること自体が苦手", score:0}
+    ]},
+  { key:'collaboration', cluster:'competency', label:'協働力',
+    q:"チームで物事を進める時", answers:[
+      {text:"周りを巻き込みながら、気持ちよく協力し合える", score:3},
+      {text:"基本的には協力できるが、時々すれ違いもある", score:2},
+      {text:"一人で抱え込んでしまうことが多い", score:1},
+      {text:"チームで動くこと自体が苦手", score:0}
+    ]},
+  { key:'leadership', cluster:'competency', label:'統率力',
+    q:"人を引っ張る場面での自分は", answers:[
+      {text:"周りを鼓舞しながら、自然にチームを引っ張れる", score:3},
+      {text:"任されれば、なんとかチームをまとめられる", score:2},
+      {text:"人を引っ張ることに、抵抗を感じる", score:1},
+      {text:"リーダー的な役割は、できれば避けたい", score:0}
+    ]},
+  { key:'emotion_control', cluster:'competency', label:'感情制御力',
+    q:"感情が揺さぶられる場面での自分は", answers:[
+      {text:"冷静に自分の感情を把握し、コントロールできる", score:3},
+      {text:"多少揺れても、時間が経てば持ち直せる", score:2},
+      {text:"感情に流されて、判断や言動がぶれることがある", score:1},
+      {text:"感情のコントロールに、強い苦手意識がある", score:0}
+    ]},
+  { key:'self_esteem', cluster:'competency', label:'自信創出力',
+    q:"自分に自信を持てているか", answers:[
+      {text:"根拠のある自信を持ち、それを行動につなげられる", score:3},
+      {text:"ある程度は自信を持てている", score:2},
+      {text:"自信を持つこと自体に、苦手意識がある", score:1},
+      {text:"自分に自信が持てず、行動が止まりがち", score:0}
+    ]},
+  { key:'persistence', cluster:'competency', label:'行動持続力',
+    q:"行動を続ける力について", answers:[
+      {text:"一度決めたことは、モチベーションに関わらずやり切れる", score:3},
+      {text:"波はあるが、なんとか続けられる", score:2},
+      {text:"最初は頑張れるが、途中で失速しやすい", score:1},
+      {text:"行動を継続すること自体が苦手", score:0}
+    ]},
+  { key:'problem_finding', cluster:'competency', label:'課題発見力',
+    q:"課題を見つける力について", answers:[
+      {text:"表面化していない課題にも、いち早く気づける", score:3},
+      {text:"指摘されれば、課題に気づける", score:2},
+      {text:"課題があっても、見過ごしてしまうことが多い", score:1},
+      {text:"何が課題なのか、なかなか掴めない", score:0}
+    ]},
+  { key:'planning', cluster:'competency', label:'計画立案力',
+    q:"計画を立てる力について", answers:[
+      {text:"目標から逆算して、現実的な計画を組み立てられる", score:3},
+      {text:"大まかな計画は立てられる", score:2},
+      {text:"計画を立てても、行き当たりばったりになりやすい", score:1},
+      {text:"計画を立てること自体が苦手", score:0}
+    ]},
+  { key:'execution', cluster:'competency', label:'実践力',
+    q:"計画を実行に移す力について", answers:[
+      {text:"決めたことを、最後までやり切れる", score:3},
+      {text:"概ね実行できるが、途中で止まることもある", score:2},
+      {text:"計画倒れになることが多い", score:1},
+      {text:"実行に移すこと自体に、時間がかかる", score:0}
+    ]},
+  { key:'knowledge_expert', cluster:'expertise', label:'専門知識',
+    q:"トレーニング指導における専門知識について", answers:[
+      {text:"最新の理論まで体系的に学び、人に教えられるレベルにある", score:3},
+      {text:"現場で使う知識は一通り身についている", score:2},
+      {text:"断片的な知識はあるが、体系立っていない", score:1},
+      {text:"専門知識に自信が持てていない", score:0}
+    ]},
+  { key:'knowledge_service', cluster:'expertise', label:'サービス知識',
+    q:"接客・ホスピタリティに関する知識について", answers:[
+      {text:"お客様心理やサービス設計まで深く理解している", score:3},
+      {text:"基本的な接客知識は身についている", score:2},
+      {text:"感覚的にやっているが、体系立っていない", score:1},
+      {text:"サービスに関する知識に不安がある", score:0}
+    ]},
+  { key:'knowledge_liberal', cluster:'expertise', label:'リベラルアーツ',
+    q:"トレーニング以外の幅広い教養について", answers:[
+      {text:"歴史・心理学・経営など幅広い分野から学び、仕事に活かせている", score:3},
+      {text:"興味のある分野については、それなりに知識がある", score:2},
+      {text:"専門分野以外には、あまり関心が向かない", score:1},
+      {text:"専門以外のことを学ぶ余裕がない", score:0}
+    ]},
+  { key:'skill_expert', cluster:'expertise', label:'専門技術',
+    q:"トレーニング指導・施術の技術について", answers:[
+      {text:"高い技術があり、独自のスタイルを確立している", score:3},
+      {text:"一定水準の技術があり、安定して対応できる", score:2},
+      {text:"基本的な技術はあるが、まだ安定しない", score:1},
+      {text:"技術面にまだ不安が大きい", score:0}
+    ]},
+  { key:'skill_service', cluster:'expertise', label:'サービス技術',
+    q:"接客・おもてなしの実践力について", answers:[
+      {text:"お客様の期待を超える対応を、自然にできている", score:3},
+      {text:"一定水準の接客対応ができている", score:2},
+      {text:"対応にムラがあり、安定しない", score:1},
+      {text:"接客対応に苦手意識がある", score:0}
+    ]},
+  { key:'skill_business', cluster:'expertise', label:'ビジネス技術',
+    q:"集客・売上づくりなどビジネス面の実践力について", answers:[
+      {text:"集客や販売の仕組みを、自分で作って回せる", score:3},
+      {text:"求められたことは、実践できる", score:2},
+      {text:"ビジネス面の実践は、まだ手探り状態", score:1},
+      {text:"ビジネス面の実践に、強い苦手意識がある", score:0}
+    ]},
+  { key:'experience', cluster:'belief', label:'原体験',
+    q:"自分を突き動かす原体験について", answers:[
+      {text:"今の自分を形作った原体験を、はっきり語れる", score:3},
+      {text:"なんとなく、影響を受けた出来事は思い当たる", score:2},
+      {text:"特に意識したことがない", score:1},
+      {text:"自分でもよくわからない", score:0}
+    ]},
+  { key:'fiction', cluster:'belief', label:'フィクションの影響',
+    q:"影響を受けた物語・作品や人物について", answers:[
+      {text:"自分に影響を与えた作品や人物を、はっきり語れる", score:3},
+      {text:"好きな作品はあるが、自分への影響は考えたことがない", score:2},
+      {text:"特に思い当たるものがない", score:1},
+      {text:"あまり物語や作品に触れてこなかった", score:0}
+    ]},
+  { key:'era', cluster:'belief', label:'時代の影響',
+    q:"自分が育った時代・環境の影響について", answers:[
+      {text:"自分の価値観に時代がどう影響したか、説明できる", score:3},
+      {text:"なんとなく、時代の影響は感じている", score:2},
+      {text:"考えたことがない", score:1},
+      {text:"時代の影響については、あまり関心がない", score:0}
+    ]},
+  { key:'instinct', cluster:'belief', label:'生物的資質',
+    q:"自分の本能的な感覚について", answers:[
+      {text:"直感や本能的な感覚を、うまく活かせている", score:3},
+      {text:"直感は働くが、活かしきれていない", score:2},
+      {text:"直感より、頭で考えることの方が多い", score:1},
+      {text:"自分の本能的な感覚が、よくわからない", score:0}
+    ]},
+  { key:'personality', cluster:'belief', label:'個性',
+    q:"自分の個性について", answers:[
+      {text:"自分ならではの個性を、はっきり自覚し活かせている", score:3},
+      {text:"個性はあると思うが、うまく活かせていない", score:2},
+      {text:"自分の個性が何なのか、あまりわかっていない", score:1},
+      {text:"周りに合わせることの方が多い", score:0}
+    ]},
+  { key:'self_esteem_env', cluster:'adaptation', label:'自己肯定感',
+    q:"ありのままの自分を受け入れられているか", answers:[
+      {text:"良い面も悪い面も含めて、自分を受け入れられている", score:3},
+      {text:"おおむね自分を受け入れられている", score:2},
+      {text:"自分の欠点ばかりが気になってしまう", score:1},
+      {text:"ありのままの自分を、なかなか受け入れられない", score:0}
+    ]},
+  { key:'self_efficacy', cluster:'adaptation', label:'自己効力感',
+    q:"「自分ならできる」という感覚について", answers:[
+      {text:"新しい課題にも「自分ならできる」と思える", score:3},
+      {text:"少し不安はあるが、挑戦はできる", score:2},
+      {text:"「自分にできるか」と、まず不安が先に立つ", score:1},
+      {text:"新しい課題を前に、動けなくなってしまう", score:0}
+    ]},
+  { key:'self_importance', cluster:'adaptation', label:'自己重要感',
+    q:"自分の存在価値についてどう感じているか", answers:[
+      {text:"自分がチームや誰かにとって必要とされている実感がある", score:3},
+      {text:"ある程度は、必要とされている実感がある", score:2},
+      {text:"自分の存在価値を、あまり感じられていない", score:1},
+      {text:"自分がいてもいなくても同じだと感じてしまう", score:0}
+    ]},
+  { key:'curiosity_knowledge', cluster:'adaptation', label:'知識欲',
+    q:"新しい知識への興味について", answers:[
+      {text:"新しい知識に触れることが、純粋に楽しい", score:3},
+      {text:"必要に迫られれば、学ぶ意欲は湧く", score:2},
+      {text:"新しい知識への興味が、あまり湧かない", score:1},
+      {text:"学ぶこと自体に、抵抗を感じる", score:0}
+    ]},
+  { key:'growth_feeling', cluster:'adaptation', label:'成長感',
+    q:"自分の成長を実感できているか", answers:[
+      {text:"自分が成長している実感を、日々感じられている", score:3},
+      {text:"たまに、成長を実感する瞬間がある", score:2},
+      {text:"最近、成長を実感できていない", score:1},
+      {text:"自分が成長しているか、正直わからない", score:0}
+    ]},
+  { key:'crisis_sense', cluster:'adaptation', label:'危機感',
+    q:"現状への危機感について", answers:[
+      {text:"今のままではいけない、という健全な危機感を持てている", score:3},
+      {text:"時々、危機感を感じることがある", score:2},
+      {text:"危機感を持つこと自体が、あまりない", score:1},
+      {text:"現状維持で構わないと思ってしまう", score:0}
+    ]},
+  { key:'mission_sense', cluster:'adaptation', label:'使命感',
+    q:"自分の仕事の意味・使命について", answers:[
+      {text:"自分がこの仕事をする意味を、はっきり言葉にできる", score:3},
+      {text:"なんとなく、意味は感じている", score:2},
+      {text:"使命感と言われても、あまりピンとこない", score:1},
+      {text:"正直、目の前の業務をこなすだけになっている", score:0}
+    ]}
 ];
 
-let currentStep = 0, answers = {}, isWaiting = false, selectedChips = [];
+const leafInfo = {
+  verbal: { title:"言語で情報を捉える力", img:"assets/03.jpg",
+    growText:"話や文章から要点を掴み、言葉で整理する力(言語力)が、今の伸びしろの中心にありそうです。",
+    strengthText:"言葉で情報を掴み、整理する力(言語力)はすでに大きな強みです。この力を、後輩指導やブログ・SNSでの発信にどんどん使っていきましょう。",
+    approach:"要約トレーニング(記事や本を3行で要約する)や、人に説明する機会を増やすと伸びやすい領域です。" },
+  numeric: { title:"数字でものごとを捉える力", img:"assets/10.jpg",
+    growText:"数字やデータから傾向を読み取る力(数的処理力)が、今の伸びしろの中心にありそうです。",
+    strengthText:"数字から傾向を読み取る力(数的処理力)はすでに強みです。売上や顧客データの分析を任せてもらう、KPI設計に関わる、といった形でさらに磨けます。",
+    approach:"日々の数字(売上・稼働率など)を、感覚ではなくグラフ化して振り返る習慣が効果的です。" },
+  logical: { title:"筋道立てて考える力", img:"assets/27.jpg",
+    growText:"物事を筋道立てて整理し、結論を導く力(論理的思考力)が、今の伸びしろの中心にありそうです。",
+    strengthText:"筋道立てて考える力(論理的思考力)はすでに強みです。複雑な課題の整理役として、チームの意思決定に関わっていくとさらに活きます。",
+    approach:"課題を「事実・解釈・提案」の3つに分けて書き出す習慣が、論理的思考を鍛えます。" },
+  creative: { title:"新しい発想を生み出す力", img:"assets/24.jpg",
+    growText:"前例にとらわれず、仮説を立てたり組み合わせたりして新しい発想を生む力(創造的思考力)が、今の伸びしろの中心にありそうです。",
+    strengthText:"新しい発想を生む力(創造的思考力)はすでに強みです。新企画やサービス開発の起点役として、積極的にアイデアを出す役割を担うとさらに伸びます。",
+    approach:"あえて「今のやり方をゼロから作り直すなら」を考える時間を、定期的に持つのがおすすめです。" },
+  affinity: { title:"人との距離を縮める力", img:"assets/30.jpg",
+    growText:"初対面の人とも自然に打ち解け、信頼関係を築く力(親和力)が、今の伸びしろの中心にありそうです。",
+    strengthText:"人と自然に打ち解ける力(親和力)はすでに強みです。新規のお客様対応や、新人の受け入れ役を積極的に担うとさらに活きます。",
+    approach:"雑談の中で相手の名前や好きなことを覚え、次回さりげなく触れる習慣が、親和力を鍛えます。" },
+  collaboration: { title:"チームで力を合わせる力", img:"assets/05.jpg",
+    growText:"周りを巻き込み、気持ちよく協力し合う力(協働力)が、今の伸びしろの中心にありそうです。",
+    strengthText:"チームで協力し合う力(協働力)はすでに強みです。プロジェクトのハブ役として、周りを巻き込む役割を担うとさらに伸びます。",
+    approach:"自分のタスクを一つ、あえて人に頼んでみることから始めると、協働の感覚がつかめます。" },
+  leadership: { title:"人を引っ張る力", img:"assets/14.jpg",
+    growText:"周りを鼓舞し、チームを前に進める力(統率力)が、今の伸びしろの中心にありそうです。",
+    strengthText:"人を引っ張る力(統率力)はすでに強みです。小さなプロジェクトのリーダーや、後輩育成の主担当を任されるとさらに伸びます。",
+    approach:"小さな集まり(勉強会や朝礼など)の進行役を、意識的に引き受けてみるのがおすすめです。" },
+  emotion_control: { title:"感情をコントロールする力", img:"assets/05.jpg",
+    growText:"感情の波を把握し、コントロールする力(感情制御力)が、今の伸びしろの中心にありそうです。",
+    strengthText:"感情をコントロールする力(感情制御力)はすでに強みです。トラブル対応や、感情的になりやすい場面のフォロー役を担えます。",
+    approach:"感情が動いた瞬間を「事実・感情・次の一手」に分けて書き出す「感情日誌」が効果的です。" },
+  self_esteem: { title:"自分への自信を育てる力", img:"assets/19.jpg",
+    growText:"自分の実力や成果を正しく認め、自信につなげる力(自信創出力)が、今の伸びしろの中心にありそうです。",
+    strengthText:"自信を持って行動する力(自信創出力)はすでに強みです。その姿勢は周りにも伝わるので、後輩の自信を育てる側にも回れます。",
+    approach:"できたことを日誌に書き出し、月末に読み返す習慣が、根拠のある自信を育てます。" },
+  persistence: { title:"やり続ける力", img:"assets/15.jpg",
+    growText:"一度決めたことを、モチベーションに関わらずやり切る力(行動持続力)が、今の伸びしろの中心にありそうです。",
+    strengthText:"やり続ける力(行動持続力)はすでに強みです。長期プロジェクトの推進役や、継続的な取り組みの旗振り役を担えます。",
+    approach:"「絶対に休まない小さな習慣」を1つだけ決めて、続ける感覚を体に覚えさせるのがおすすめです。" },
+  problem_finding: { title:"課題に気づく力", img:"assets/17.jpg",
+    growText:"表面化する前の課題に気づく力(課題発見力)が、今の伸びしろの中心にありそうです。",
+    strengthText:"課題に気づく力(課題発見力)はすでに強みです。店舗やチームの改善提案役として、その気づきを積極的に発信していきましょう。",
+    approach:"「小さな違和感」を見つけたその日のうちにメモする習慣が、課題発見力を鍛えます。" },
+  planning: { title:"逆算して計画する力", img:"assets/34.jpg",
+    growText:"目標から逆算し、現実的な計画を組み立てる力(計画立案力)が、今の伸びしろの中心にありそうです。",
+    strengthText:"計画を立てる力(計画立案力)はすでに強みです。四半期計画やプロジェクトの設計役を担うと、さらに力が磨かれます。",
+    approach:"大きな目標を「今月・今週・今日」の3段階に分解して書き出す習慣が効果的です。" },
+  execution: { title:"最後までやり切る実践力", img:"assets/12.jpg",
+    growText:"決めたことを最後までやり切る力(実践力)が、今の伸びしろの中心にありそうです。",
+    strengthText:"やり切る力(実践力)はすでに強みです。新しい施策の実行担当として、周りより先に動く役割を担えます。",
+    approach:"計画の最初の一歩を、5分以内でできる小さな行動に分解しておくと、実践に移しやすくなります。" },
+  knowledge_expert: { title:"専門知識を深める力", img:"assets/24.jpg",
+    growText:"トレーニング指導における体系的な専門知識が、今の伸びしろの中心にありそうです。",
+    strengthText:"専門知識はすでに強みです。勉強会の講師役や、後輩育成のカリキュラム作りに関わると、その知識がチーム全体の資産になります。",
+    approach:"資格取得サポートや課題図書を通じて、知識を体系立てて積み上げるのがおすすめです。" },
+  knowledge_service: { title:"サービス知識を深める力", img:"assets/05.jpg",
+    growText:"お客様心理やサービス設計についての知識が、今の伸びしろの中心にありそうです。",
+    strengthText:"サービス知識はすでに強みです。接客マニュアルの整備役や、新人への接客指導役として力を発揮できます。",
+    approach:"接客が上手な人の対応を観察し、なぜそれが響くのかを言語化してみる習慣がおすすめです。" },
+  knowledge_liberal: { title:"幅広い教養(リベラルアーツ)", img:"assets/19.jpg",
+    growText:"専門分野の外側にある幅広い知識・教養(リベラルアーツ)が、今の伸びしろの中心にありそうです。",
+    strengthText:"幅広い教養はすでに強みです。専門的すぎない例え話でお客様やチームに説明できる、貴重な橋渡し役になれます。",
+    approach:"課題図書を専門書だけでなく、歴史・心理学・経営など分野を広げて選んでみるのがおすすめです。" },
+  skill_expert: { title:"専門技術を磨く力", img:"assets/27.jpg",
+    growText:"トレーニング指導・施術における専門技術が、今の伸びしろの中心にありそうです。",
+    strengthText:"専門技術はすでに強みです。店舗研修での実技指導役や、難しいケースの相談役を担えるレベルにあります。",
+    approach:"店舗研修や所属店舗外での実践経験を通じて、場数を意図的に増やすのが効果的です。" },
+  skill_service: { title:"サービス技術(接客の実践力)", img:"assets/30.jpg",
+    growText:"お客様の期待に応える接客の実践力(サービス技術)が、今の伸びしろの中心にありそうです。",
+    strengthText:"サービス技術はすでに強みです。お客様満足度に直結する部分なので、その対応をマニュアル化してチームに共有する役割にも向いています。",
+    approach:"接客後に「今日一番良かった対応」を振り返り、パターン化して言語化する習慣がおすすめです。" },
+  skill_business: { title:"ビジネス技術(集客・売上づくり)", img:"assets/12.jpg",
+    growText:"集客や売上づくりといったビジネス面の実践力が、今の伸びしろの中心にありそうです。",
+    strengthText:"ビジネス技術はすでに強みです。店舗の集客施策や新しい仕組みづくりの推進役として、経営側の視点でも力を発揮できます。",
+    approach:"経営に関する学びや、小さな集客施策を自分で企画・実行してみる経験がおすすめです。" },
+  experience: { title:"原体験を掘り下げる力", img:"assets/19.jpg",
+    growText:"今の自分を形作った原体験への理解が、今の伸びしろの中心にありそうです。",
+    strengthText:"原体験への理解はすでに強みです。その物語を言葉にして発信することで、共感してくれる仲間やお客様がさらに増えます。",
+    approach:"人生の転機となった出来事を年表にして書き出す「人生計画ワーク」がおすすめです。" },
+  fiction: { title:"憧れ・理想像を言語化する力", img:"assets/25.jpg",
+    growText:"自分が憧れてきた物語や人物像への理解が、今の伸びしろの中心にありそうです。",
+    strengthText:"理想像への理解はすでに強みです。その憧れを具体的な行動目標に落とし込むと、さらに推進力が増します。",
+    approach:"影響を受けた作品や人物と、自分がなぜ惹かれたのかを書き出してみるワークが効果的です。" },
+  era: { title:"時代背景と価値観を結びつける力", img:"assets/07.jpg",
+    growText:"自分が育った時代背景と、今の価値観のつながりへの理解が、今の伸びしろの中心にありそうです。",
+    strengthText:"時代背景と自分の価値観を結びつける力はすでに強みです。世代を超えたコミュニケーションの橋渡し役としても活きます。",
+    approach:"自分が10代・20代の頃に流行っていたものと、今の自分の考え方のつながりを振り返ってみましょう。" },
+  instinct: { title:"本能的な感覚を活かす力", img:"assets/12.jpg",
+    growText:"直感や本能的な感覚(生物的資質)を自覚し、活かす力が、今の伸びしろの中心にありそうです。",
+    strengthText:"直感を活かす力(生物的資質)はすでに強みです。とっさの判断が求められる現場対応で、その感覚を積極的に発揮していきましょう。",
+    approach:"迷った時にまず直感で判断し、その後で理由を言語化する練習が、感覚を磨きます。" },
+  personality: { title:"自分の個性を自覚し活かす力", img:"assets/03.jpg",
+    growText:"自分ならではの個性の自覚と活用が、今の伸びしろの中心にありそうです。",
+    strengthText:"個性を自覚し活かす力はすでに強みです。その個性を前面に出したブランディングや発信をしていくと、さらに強みが際立ちます。",
+    approach:"信頼できる人に「自分らしいと思う瞬間」を聞いてみると、自分では気づけない個性が見えてきます。" },
+  self_esteem_env: { title:"自己肯定感を育てる力", img:"assets/11.jpg",
+    growText:"ありのままの自分を受け入れる力(自己肯定感)が、今の伸びしろの中心にありそうです。",
+    strengthText:"自己肯定感はすでに強みです。その安定感は、周りの人にも安心感を与えます。悩んでいる後輩の話を聞く役割にも向いています。",
+    approach:"1日の終わりに「今日の自分の良かったところ」を1つ書き出す習慣がおすすめです。" },
+  self_efficacy: { title:"自己効力感を育てる力", img:"assets/15.jpg",
+    growText:"「自分ならできる」という感覚(自己効力感)が、今の伸びしろの中心にありそうです。",
+    strengthText:"自己効力感はすでに強みです。新しい挑戦を率先して引き受ける役割として、チームの推進力になれます。",
+    approach:"小さな成功体験を意図的に積み重ね、それを可視化する(日誌に記録する)ことが効果的です。" },
+  self_importance: { title:"自分の存在価値を実感する力", img:"assets/30.jpg",
+    growText:"自分がチームや誰かにとって必要とされている実感(自己重要感)が、今の伸びしろの中心にありそうです。",
+    strengthText:"自己重要感はすでに強みです。その安定した存在感を活かして、チームの中心的な役割を担っていけます。",
+    approach:"感謝された言葉や出来事を記録しておき、迷った時に読み返す習慣がおすすめです。" },
+  curiosity_knowledge: { title:"知識欲を育てる力", img:"assets/34.jpg",
+    growText:"新しい知識に触れることへの興味(知識欲)が、今の伸びしろの中心にありそうです。",
+    strengthText:"知識欲はすでに強みです。学んだことをチームに共有する「学びのハブ」役を担うと、その好奇心が周りにも波及します。",
+    approach:"興味のあるテーマを1つ決めて、毎週少しずつインプットする習慣を作るのがおすすめです。" },
+  growth_feeling: { title:"成長実感を育てる力", img:"assets/24.jpg",
+    growText:"自分の成長を実感する感覚(成長感)が、今の伸びしろの中心にありそうです。",
+    strengthText:"成長実感を持てる力はすでに強みです。定期的な振り返りの習慣が身についている証拠なので、その方法を周りにも共有してみましょう。",
+    approach:"月に一度、半年前の自分と今の自分を比べて書き出す「月誌・年誌」の振り返りが効果的です。" },
+  crisis_sense: { title:"健全な危機感を育てる力", img:"assets/14.jpg",
+    growText:"今のままではいけない、という健全な危機感が、今の伸びしろの中心にありそうです。",
+    strengthText:"健全な危機感はすでに強みです。チームや店舗の変化を先取りする「気づき役」として、周りを動かす存在になれます。",
+    approach:"業界や市場の変化について、定期的に情報収集する時間を意図的に作るのがおすすめです。" },
+  mission_sense: { title:"使命感を育てる力", img:"assets/25.jpg",
+    growText:"自分がこの仕事をする意味・使命感が、今の伸びしろの中心にありそうです。",
+    strengthText:"使命感はすでに強みです。その想いを言葉にして発信することで、チームやお客様を巻き込む力に変わります。",
+    approach:"「なぜこの仕事をしているのか」を、人に説明するつもりで書き出してみる人生計画ワークが効果的です。" }
+};
 
-function renderProgress() {
-  const bar = document.getElementById('progressBar');
-  bar.innerHTML = '';
-  STEPS.forEach((s, i) => {
-    const el = document.createElement('div');
-    el.className = 'prog-step';
-    const done = i < currentStep, active = i === currentStep;
-    el.innerHTML = `<div class="prog-dot ${done?'done':''} ${active?'active':''}">${done?'✓':(i+1)}</div><div class="prog-label ${active?'active':''}">${s.label}</div>`;
-    bar.appendChild(el);
-    if (i < STEPS.length - 1) { const l = document.createElement('div'); l.className = `prog-line ${done?'done':''}`; bar.appendChild(l); }
-  });
+const clusterLabels = { jiatama:'地頭', competency:'対人・対自己・対課題', expertise:'専門力', belief:'価値観信念', adaptation:'環境適応' };
+const clusterTools = {
+  jiatama: [
+    { name:'Blog・SNS発信', howto:'学んだことや気づきを、週1回でいいので短い文章でSNSに投稿してみましょう。人に説明するつもりで書くと、自分の理解の甘い部分が見えてきます。' },
+    { name:'読書論文の要約', howto:'月1冊、専門書や論文を読み、要点3つと自分の意見1つをA4一枚にまとめてみましょう。要約力と論理的思考が同時に鍛えられます。' },
+    { name:'課題プレゼン', howto:'学んだことを月1回、5分程度でチームに発表する場を作りましょう。話す前提で情報を整理すると、理解が一気に深まります。' }
+  ],
+  competency: [
+    { name:'報連相', howto:'「事実→解釈→次の一手」の順番で、1日1回は上司や同僚に共有する習慣をつけましょう。' },
+    { name:'フィードバック', howto:'週1回、自分から「率直に感じたことを教えてください」と誰かに聞きに行きましょう。もらった言葉はその場でメモしておくと定着します。' },
+    { name:'四半期計画', howto:'3ヶ月ごとに「目標→今月やること→今週やること」の3段階で計画を書き出し、月末に振り返りましょう。' },
+    { name:'スタッツ', howto:'稼働率・売上・顧客満足度など自分に関わる数字を週1回記録し、グラフ化して変化を追ってみましょう。' },
+    { name:'MBO(目標管理)', howto:'上司と一緒に、四半期ごとに具体的な数値目標を設定し、達成度を定期的にすり合わせる面談を行いましょう。' }
+  ],
+  expertise: [
+    { name:'マニュアルテスト', howto:'月1回、既存のマニュアルを見ずに手順を書き出し、抜け漏れがないか自己テストしてみましょう。' },
+    { name:'課題図書', howto:'会社や上司から指定された本を期限を決めて読み、感想文か要約を提出しましょう。' },
+    { name:'資格取得サポート', howto:'半年〜1年単位で取得したい資格を1つ決め、逆算した学習計画を立てて申し込みまで済ませましょう。' },
+    { name:'所属店舗外体験', howto:'他店舗やイベントに月1回以上足を運び、自分の店との違いをメモして持ち帰りましょう。' },
+    { name:'店舗研修', howto:'新しい技術やプログラムを、お客様役を立てて反復練習する場を定期的に設けましょう。' },
+    { name:'勉強会・練習会', howto:'週1回30分でもいいので、テーマを決めてチームで技術や知識を教え合う時間を作りましょう。' }
+  ],
+  belief: [
+    { name:'人生計画', howto:'半年に1回、これまでの人生の転機を年表にし、これからの5年・10年を逆算して書き出してみましょう。' },
+    { name:'課題図書', howto:'価値観や生き方をテーマにした本を選び、読んだ後に「自分ならどうするか」を書き出してみましょう。' }
+  ],
+  adaptation: [
+    { name:'社内外イベント', howto:'3ヶ月に1回は普段の業務と違う場(セミナー・交流会など)に参加し、得た気づきを1つ言語化しましょう。' },
+    { name:'プロジェクト', howto:'新しい企画やチームプロジェクトに、年に1回以上は手を挙げて関わってみましょう。' },
+    { name:'役職制度', howto:'今の役割より一歩上のポジションを目標にし、そのために必要な経験を上司と一緒にリストアップしましょう。' },
+    { name:'経営勉強会', howto:'月1回、売上・利益・コストなど経営に関わる数字をチームで一緒に読み解く時間を作りましょう。' }
+  ]
+};
+const universalTools = [
+  { name:'日誌', howto:'毎日5分、「今日やったこと・気づき・明日への一言」を3行で書きましょう。' },
+  { name:'週誌', howto:'週末に日誌を読み返し、その週の学びを1つにまとめましょう。' },
+  { name:'月誌', howto:'月末に週誌を読み返し、成長したポイントと課題を1つずつ書き出しましょう。' },
+  { name:'Q誌', howto:'3ヶ月ごとに月誌を振り返り、次の3ヶ月の目標を立て直しましょう。' },
+  { name:'年誌', howto:'年に1回、1年間を振り返り、翌年のテーマを1つ決めましょう。' },
+  { name:'メンターシップ', howto:'信頼できる先輩を1人見つけ、月1回30分でいいので壁打ちしてもらう時間を確保しましょう。' },
+  { name:'課題図書', howto:'定期的に指定図書を読み、感想を共有する習慣を持ちましょう。' }
+];
+function renderToolList(tools){
+  return '<ul class="tool-list">' + tools.map(function(t){
+    return '<li class="tool-item"><span class="tool-name">' + t.name + '</span><p class="tool-howto">' + t.howto + '</p></li>';
+  }).join('') + '</ul>';
 }
 
-function addMessage(text, role='ai', isLoading=false) {
-  const c = document.getElementById('chatMessages');
-  const msg = document.createElement('div');
-  msg.className = `msg ${role}`;
-  if (isLoading) msg.id = 'loadingMsg';
-  const fmt = isLoading ? `<div class="typing"><span></span><span></span><span></span></div>` : text.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
-  msg.innerHTML = `<div class="msg-avatar">${role==='ai'?'🤖':'👤'}</div><div class="msg-bubble">${fmt}</div>`;
-  c.appendChild(msg); c.scrollTop = c.scrollHeight;
-}
+const treeStructure = [
+  { label:'Value', axisClass:'value', children: [
+      { label:'基礎力', children: [
+          { label:'地頭', children: [
+              { label:'処理力', leaves:['verbal','numeric'] },
+              { label:'思考力', leaves:['logical','creative'] }
+          ]},
+          { label:'competency', children: [
+              { label:'対人能力', leaves:['affinity','collaboration','leadership'] },
+              { label:'対自己能力', leaves:['emotion_control','self_esteem','persistence'] },
+              { label:'対課題能力', leaves:['problem_finding','planning','execution'] }
+          ]}
+      ]},
+      { label:'専門力', children: [
+          { label:'知識', leaves:['knowledge_expert','knowledge_service','knowledge_liberal'] },
+          { label:'技術', leaves:['skill_expert','skill_service','skill_business'] }
+      ]}
+  ]},
+  { label:'Vision', axisClass:'vision', children: [
+      { label:'価値観信念', children: [
+          { label:'後天的', leaves:['experience','fiction','era'] },
+          { label:'先天的', leaves:['instinct','personality'] }
+      ]},
+      { label:'環境適応', children: [
+          { label:'自信', leaves:['self_esteem_env','self_efficacy','self_importance'] },
+          { label:'好奇心', leaves:['curiosity_knowledge','growth_feeling'] },
+          { label:'当事者意識', leaves:['crisis_sense','mission_sense'] }
+      ]}
+  ]}
+];
 
-function renderChips(chips) {
-  selectedChips = [];
-  const c = document.getElementById('quickChips');
-  c.innerHTML = '';
-  (chips||[]).forEach(chip => {
-    const el = document.createElement('button');
-    el.className = 'chip'; el.textContent = chip;
-    el.onclick = () => {
-      const on = el.dataset.on === '1';
-      el.dataset.on = on ? '0' : '1';
-      el.style.background = on ? '' : 'var(--teal)';
-      el.style.color = on ? 'var(--teal)' : 'var(--navy)';
-      el.style.fontWeight = on ? '' : '700';
-      selectedChips = on ? selectedChips.filter(c=>c!==chip) : [...selectedChips, chip];
-    };
-    c.appendChild(el);
-  });
-}
+// ============================
+// フロー構築
+// ============================
+const flow = [];
+flow.push({ type:'question', phase:'p1', field:'concern', data: concernQ });
+flow.push({ type:'question', phase:'p1', field:'ideal', data: idealQ });
+flow.push({ type:'question', phase:'p2', field:'work', data: workQ });
+flow.push({ type:'question', phase:'p2', field:'life', data: lifeQ });
+flow.push({ type:'gap', phase:'p2' });
+flow.push({ type:'p3intro', phase:'p3' });
+leafQuestions.forEach((lq, i)=>{
+  flow.push({ type:'leaf', phase:'p3', leaf: lq, headerIdx: i });
+});
+flow.push({ type:'freeform', phase:'p3' });
 
-function askQuestion(i) {
-  if (i >= STEPS.length) { runAnalysis(); return; }
-  const s = STEPS[i];
-  setTimeout(() => { addMessage(s.question,'ai'); renderChips(s.chips); document.getElementById('chatInput').placeholder = s.hint||'ここに入力してください…'; }, 400);
-}
+const answersStore = {};
+const leafScores = {};
+leafQuestions.forEach(d=>{ leafScores[d.key] = 0; });
 
-function handleSend() {
-  if (isWaiting) return;
-  const inp = document.getElementById('chatInput');
-  let txt = inp.value.trim();
-  if (selectedChips.length) txt = selectedChips.join('、') + (txt ? '\n'+txt : '');
-  if (!txt) return;
-  inp.value = ''; inp.style.height = 'auto';
-  document.getElementById('quickChips').innerHTML = ''; selectedChips = [];
-  addMessage(txt,'user');
-  answers[STEPS[currentStep].key] = txt;
-  currentStep++; renderProgress();
-  if (currentStep >= STEPS.length) {
-    isWaiting = true;
-    document.getElementById('sendBtn').disabled = true;
-    document.getElementById('chatInput').disabled = true;
-    addMessage('','ai',true);
-    runAnalysis();
-  } else { askQuestion(currentStep); }
-}
+let stepIndex = 0;
+const card = document.getElementById('card');
+const progress = document.getElementById('progress');
+const phaseLabel = document.getElementById('phaseLabel');
+const subLabel = document.getElementById('subLabel');
 
-async function runAnalysis() {
-  const prompt = `あなたはパーソナルトレーナー・スポーツインストラクター専門のキャリアアドバイザーです。以下のクライアント情報をもとに、詳細なキャリア診断レポートを日本語で作成してください。
+function clusterOf(key){ return leafQuestions.find(d=>d.key===key).cluster; }
+const VALUE_CLUSTERS = ['jiatama','competency','expertise'];
+function axisOfCluster(cluster){ return VALUE_CLUSTERS.indexOf(cluster) !== -1 ? 'value' : 'vision'; }
+function leafLabel(key){ return leafQuestions.find(d=>d.key===key).label; }
+function scoreOutOf5(key){ return ((leafScores[key] / 3) * 5).toFixed(1); }
 
-【クライアント情報】
-基本情報：${answers.basic||'未回答'}
-経歴：${answers.career||'未回答'}
-悩み：${answers.worries||'未回答'}
-将来の目標：${answers.future||'未回答'}
-強み：${answers.strengths||'未回答'}
-弱み：${answers.weaknesses||'未回答'}
-興味分野：${answers.interests||'未回答'}
-スキル評価：${answers.skills||'未回答'}
-価値観：${answers.values||'未回答'}
-制約：${answers.constraints||'未回答'}
-相談内容：${answers.question||'未回答'}
-
-【回答形式】以下の順番で具体的に回答してください：
-①現状分析
-②市場価値（具体的な数値で）
-③5年後・10年後の市場価値変化
-④AIによる代替リスク分析
-⑤今後伸びる分野
-⑥おすすめキャリア（第1〜3候補・理由・年収目安）
-⑦今後3年で身につけるべきスキル（優先順位付き）
-⑧年収シミュレーション（現在・3年後・5年後・10年後を複数パターン）
-⑨具体的行動計画（今日から・3ヶ月・半年・1年・3年）
-⑩「私だったらこうする」率直な提案
-
-具体的な数字・サービス名・手順を含め、親身で率直なトーンで答えてください。`;
-
-  try {
-    const res = await fetch("/api/chat", {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: "claude-haiku-4-5", max_tokens: 2048, messages: [{ role: "user", content: prompt }] })
-    });
-    const data = await res.json();
-    document.getElementById('loadingMsg')?.remove();
-    if (data.content?.[0]?.text) {
-      addMessage('✅ **診断完了！** あなた専用のキャリアレポートをお届けします。\n\n' + data.content[0].text, 'ai');
-    } else {
-      console.error('Gemini error:', JSON.stringify(data));
-      addMessage('エラーが発生しました。APIキーの設定を確認してください。\n\nエラー詳細: ' + (data.error?.message || JSON.stringify(data)), 'ai');
+function renderProgress(){
+  progress.innerHTML = '';
+  flow.forEach((s,i)=>{
+    const d = document.createElement('div');
+    let cls = 'dot';
+    if(i < stepIndex){
+      if(s.phase === 'p1'){ cls += ' done p1'; }
+      else if(s.phase === 'p2'){ cls += ' done p2'; }
+      else if(s.phase === 'p3'){
+        cls += (s.leaf && axisOfCluster(s.leaf.cluster) === 'vision') ? ' done vision' : ' done value';
+      }
     }
-  } catch(e) {
-    document.getElementById('loadingMsg')?.remove();
-    addMessage('通信エラーが発生しました。ページを再読み込みしてもう一度お試しください。', 'ai');
-    console.error(e);
-  } finally {
-    isWaiting = false;
-    document.getElementById('sendBtn').disabled = false;
-    document.getElementById('chatInput').disabled = false;
-    renderChips([]);
-    document.getElementById('chatInput').placeholder = '追加の質問があればどうぞ…';
-    document.getElementById('inputHint').textContent = '診断結果について質問があればどうぞ';
-    currentStep = 999;
+    d.className = cls;
+    progress.appendChild(d);
+  });
+}
+
+function goNext(){
+  stepIndex++;
+  if(stepIndex < flow.length){ renderStep(); } else { renderResult(); }
+}
+
+function renderStep(){
+  const s = flow[stepIndex];
+  renderProgress();
+
+  if(s.type === 'question'){
+    const labelMap = { p1:'STEP 1: キャリアの悩み', p2:'STEP 2: 現状の把握' };
+    phaseLabel.textContent = labelMap[s.phase];
+    subLabel.textContent = '';
+    const q = s.data;
+    card.innerHTML = `
+      <div class="mascot-wrap"><img src="${q.mascot}" alt=""></div>
+      <div class="question">${q.q}</div>
+      <div class="answers">
+        ${q.answers.map((a,i)=>`
+          <div class="answer" data-idx="${i}">
+            <img src="${a.img}" alt="">
+            <span>${a.text}</span>
+          </div>
+        `).join('')}
+      </div>
+    `;
+    card.querySelectorAll('.answer').forEach(el=>{
+      el.addEventListener('click', ()=>{
+        const idx = el.getAttribute('data-idx');
+        const chosen = q.answers[idx];
+        answersStore[s.field] = chosen.value !== undefined ? chosen.value : chosen.label;
+        answersStore[s.field + 'Label'] = chosen.label;
+        goNext();
+      });
+    });
+    return;
+  }
+
+  if(s.type === 'gap'){
+    phaseLabel.textContent = 'STEP 2: 現状の把握';
+    subLabel.textContent = '';
+    card.innerHTML = `
+      <div class="mascot-wrap"><img src="assets/09.jpg" alt=""></div>
+      <div class="question">理想と現状のギャップ</div>
+      <div class="info-box">
+        <div class="row">理想: <b>${answersStore.idealLabel}</b></div>
+        <div class="row">今の仕事: <b>${answersStore.workLabel}</b></div>
+        <div class="row">プライベート: <b>${answersStore.lifeLabel}</b></div>
+      </div>
+      <p class="info-text">理想と現状の間に、ギャップがありそうです。次のステップでは、そのギャップの"正体"を一緒に掘り下げていきます。</p>
+      <button class="next-btn" id="nextBtn">次へ進む</button>
+    `;
+    document.getElementById('nextBtn').addEventListener('click', goNext);
+    return;
+  }
+
+  if(s.type === 'p3intro'){
+    phaseLabel.textContent = 'STEP 3: 課題発見';
+    subLabel.textContent = '';
+    card.innerHTML = `
+      <div class="mascot-wrap"><img src="assets/17.jpg" alt=""></div>
+      <div class="time-badge">⏱ 所要時間の目安: 約5分</div>
+      <div class="question">本当のボトルネックはどこ?</div>
+      <p class="info-text">多くの人は、キャリアの悩みを「知識や経験が足りないから」「環境が合わないから」と考えがちです。でも実際は、地頭・対人力・専門性・価値観・環境適応力など、もっと多くの要素が絡み合っています。<br><br>ここから31の質問で、あなたの本質的な伸びしろと、すでにある強みを両方明らかにしていきます。</p>
+      <p class="intuition-hint">💭 難しく考えず、パッと浮かんだ直感で選んでみてください。考えすぎると、かえって"素の自分"から遠ざかってしまいます。</p>
+      <button class="next-btn" id="nextBtn">診断をはじめる(全31問)</button>
+    `;
+    document.getElementById('nextBtn').addEventListener('click', goNext);
+    return;
+  }
+
+  if(s.type === 'freeform'){
+    phaseLabel.textContent = 'STEP 3: 課題発見(最後に)';
+    subLabel.textContent = '';
+    card.innerHTML = `
+      <div class="mascot-wrap"><img src="assets/25.jpg" alt=""></div>
+      <div class="question">最後に、少しだけ教えてください</div>
+      <p class="info-text">ここに書いた内容は、この下のアドバイスに反映されます。空欄のまま進んでも大丈夫です。</p>
+      <div class="freeform-field">
+        <label>年齢</label>
+        <input type="number" id="ffAge" placeholder="例: 24">
+      </div>
+      <div class="freeform-field">
+        <label>性別</label>
+        <select id="ffGender">
+          <option value="">選択しない</option>
+          <option value="男性">男性</option>
+          <option value="女性">女性</option>
+          <option value="回答しない">回答しない</option>
+        </select>
+      </div>
+      <div class="freeform-field">
+        <label>あなたが思い描く、理想の未来像を教えてください</label>
+        <textarea id="ffFuture" rows="4" placeholder="例: 3年後には自分の店を持って、地域で一番信頼されるトレーナーになりたい"></textarea>
+      </div>
+      <button class="next-btn" id="nextBtn">診断結果を見る</button>
+    `;
+    document.getElementById('nextBtn').addEventListener('click', ()=>{
+      answersStore.age = document.getElementById('ffAge').value;
+      answersStore.gender = document.getElementById('ffGender').value;
+      answersStore.futureVision = document.getElementById('ffFuture').value;
+      goNext();
+    });
+    return;
+  }
+
+  if(s.type === 'leaf'){
+    const lq = s.leaf;
+    const axis = axisOfCluster(lq.cluster);
+    const remaining = leafQuestions.length - s.headerIdx;
+    phaseLabel.textContent = 'STEP 3: 課題発見(' + (axis === 'value' ? 'Value' : 'Vision') + ')';
+    subLabel.textContent = '今のテーマ: ' + lq.label;
+    card.innerHTML = `
+      <div class="mascot-wrap"><img src="${headerImg(s.headerIdx)}" alt=""></div>
+      <div class="remaining-badge">残り ${remaining} 問</div>
+      <div class="question">${lq.q}</div>
+      <div class="intuition-hint small">💭 直感でパッと選んでOK</div>
+      <div class="answers">
+        ${lq.answers.map((a,i)=>`
+          <div class="answer" data-idx="${i}">
+            <img src="${scoreImg(a.score, s.headerIdx + i)}" alt="">
+            <span>${a.text}</span>
+          </div>
+        `).join('')}
+      </div>
+    `;
+    card.querySelectorAll('.answer').forEach(el=>{
+      el.addEventListener('click', ()=>{
+        const idx = el.getAttribute('data-idx');
+        const chosen = lq.answers[idx];
+        leafScores[lq.key] += chosen.score;
+        goNext();
+      });
+    });
+    return;
   }
 }
 
-document.getElementById('chatInput').addEventListener('input', function() { this.style.height='auto'; this.style.height=Math.min(this.scrollHeight,140)+'px'; });
-document.getElementById('chatInput').addEventListener('keydown', function(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();handleSend();} });
-
-function resetChat() {
-  currentStep=0; answers={}; selectedChips=[]; isWaiting=false;
-  document.getElementById('chatMessages').innerHTML='';
-  document.getElementById('quickChips').innerHTML='';
-  const inp=document.getElementById('chatInput');
-  inp.value=''; inp.disabled=false; inp.style.height='auto';
-  document.getElementById('sendBtn').disabled=false;
-  document.getElementById('inputHint').textContent='Enterで送信（Shift+Enterで改行）';
-  renderProgress(); askQuestion(0);
+// ============================
+// 結果画面
+// ============================
+function leafRowHtml(key, coreKey, topKey, axisClass){
+  const lq = leafQuestions.find(d=>d.key===key);
+  const pct = Math.round((leafScores[key] / 3) * 100);
+  let rowCls = 'leaf-row';
+  let fillCls = axisClass;
+  if(key === coreKey){ rowCls += ' core'; fillCls = 'core'; }
+  else if(key === topKey){ rowCls += ' top'; fillCls = 'top'; }
+  return `
+    <div class="${rowCls}">
+      <span class="leaf-name">${lq.label}</span>
+      <div class="leaf-track"><div class="leaf-fill ${fillCls}" style="width:${pct}%"></div></div>
+      <span class="leaf-score">${scoreOutOf5(key)}/5</span>
+    </div>
+  `;
 }
 
-renderProgress(); askQuestion(0);
+function renderGroup(node, depth, axisClass, coreKey, topKey){
+  let html = '';
+  const clsByDepth = {1:'tree-group', 2:'tree-sub', 3:'tree-subsub'};
+  html += `<div class="${clsByDepth[depth] || 'tree-subsub'}">${node.label}</div>`;
+  if(node.children){
+    node.children.forEach(c => { html += renderGroup(c, depth+1, axisClass, coreKey, topKey); });
+  } else if(node.leaves){
+    node.leaves.forEach(k => { html += leafRowHtml(k, coreKey, topKey, axisClass); });
+  }
+  return html;
+}
+
+function renderTree(coreKey, topKey){
+  let html = '';
+  treeStructure.forEach(axisNode=>{
+    html += `<div class="tree-axis ${axisNode.axisClass}">${axisNode.label}</div>`;
+    axisNode.children.forEach(child => { html += renderGroup(child, 1, axisNode.axisClass, coreKey, topKey); });
+  });
+  return html;
+}
+
+function computeClusterAverages(){
+  const clusters = ['jiatama','competency','expertise','belief','adaptation'];
+  const avg = {};
+  clusters.forEach(c=>{
+    const leaves = leafQuestions.filter(d=>d.cluster===c);
+    const sum = leaves.reduce((s,d)=> s + leafScores[d.key], 0);
+    const rawAvg = sum / leaves.length;
+    avg[c] = (rawAvg / 3) * 5;
+  });
+  return avg;
+}
+
+function buildRadarSVG(avg){
+  const axes = ['jiatama','competency','expertise','belief','adaptation'];
+  const labels = { jiatama:'地頭', competency:'対人・自己・課題', expertise:'専門力', belief:'価値観信念', adaptation:'環境適応' };
+  const cx=150, cy=155, maxR=92;
+  const angleStep = (2*Math.PI)/axes.length;
+  function pt(i, val){
+    const angle = -Math.PI/2 + i*angleStep;
+    const r = (val/5)*maxR;
+    return [cx + r*Math.cos(angle), cy + r*Math.sin(angle)];
+  }
+  const polyPoints = axes.map((k,i)=> pt(i, avg[k]).join(',')).join(' ');
+  const rings = [1,2,3,4,5].map(level=>{
+    const pts = axes.map((k,i)=> pt(i, level).join(',')).join(' ');
+    return `<polygon points="${pts}" fill="none" stroke="#EDE7D9" stroke-width="1"/>`;
+  }).join('');
+  const axisDecor = axes.map((k,i)=>{
+    const edge = pt(i, 5);
+    const labelPt = pt(i, 6.1);
+    const scorePt = pt(i, 6.85);
+    return `<line x1="${cx}" y1="${cy}" x2="${edge[0]}" y2="${edge[1]}" stroke="#E7DFD0" stroke-width="1"/>
+      <text x="${labelPt[0]}" y="${labelPt[1]}" font-size="9.5" text-anchor="middle" fill="#4A4640" font-weight="700">${labels[k]}</text>
+      <text x="${scorePt[0]}" y="${scorePt[1]}" font-size="9" text-anchor="middle" fill="#B0A899">${avg[k].toFixed(1)}/5</text>`;
+  }).join('');
+  return `<svg viewBox="0 0 300 340" width="100%" style="max-width:300px;display:block;margin:0 auto;">
+    ${rings}
+    ${axisDecor}
+    <polygon points="${polyPoints}" fill="rgba(255,106,61,0.28)" stroke="#FF6A3D" stroke-width="2"/>
+  </svg>`;
+}
+
+function buildBridge(coreKey, r){
+  const concernLabel = answersStore.concernLabel;
+  if(coreKey.indexOf('knowledge_') === 0 || coreKey.indexOf('skill_') === 0){
+    return `最初は「${concernLabel}」という入り口だったけど、掘り下げてみると、確かに「${r.title}」という実力面に伸びしろがありそうです。ただしそれは、他の要素が土台にあってこそ活きてくる部分でもあります。`;
+  }
+  return `最初は「${concernLabel}」という入り口だったけど、掘り下げてみると、多くの人が思い込みがちな「知識・技術・環境のせい」ではなく、実は「${r.title}」に本当の伸びしろがありそうです。`;
+}
+
+function buildStrengthProse(topKey){
+  const label = leafLabel(topKey);
+  const info = leafInfo[topKey];
+  return `
+    <div class="prep">
+      <p>まず伝えたいのは、「${label}」はすでにあなたの武器だということです。ここを軸にして、これからのキャリアを組み立てていくのがおすすめです。</p>
+      <p>実際、ギャラップ社が45か国・120万人以上を対象に行った大規模な調査では、マネジャーが強みに注目したチームは、弱みばかりに注目したチームに比べて、やる気のある人とない人の比率が60対1にもなったのに対し、弱み重視のチームでは2対1にとどまったと報告されています。弱点の克服にエネルギーを使うより、強みを伸ばす方が、ずっと成果や充実感につながりやすいのです。</p>
+      <p>具体的には、${info.strengthText}</p>
+      <p>「${label}」を使う機会を、自分から意識的に作っていきましょう。それが一番の近道です。</p>
+    </div>
+  `;
+}
+
+function buildWeaknessProseValue(coreKey, coreCluster){
+  const label = leafLabel(coreKey);
+  const info = leafInfo[coreKey];
+  return `
+    <div class="prep">
+      <p>今回の診断で見えてきたあなたの弱点は、「${label}」です。ここは無理に一人で克服しようとしなくて大丈夫です。</p>
+      <p>イギリスの研究者メレディス・ベルビンによるチーム研究では、どんな優秀な人にも「強みとセットになった、仕方のない弱さ」があり、それを一人でゼロにしようとするより、チーム全体で補い合う方がずっとうまくいくことがわかっています。弱点を消そうとする努力よりも、得意な人と組む方が、結果的にチームの成果は上がりやすいのです。</p>
+      <p>具体的には、${info.approach} また、日頃から「${clusterLabels[coreCluster]}」が得意なスタッフに、率直に頼ったり教えてもらったりする関係を作っておくと、この部分は自然と補われていきます。</p>
+      <p>「${label}」は、あなた一人の課題ではなく、チームで補強すればどうにでもなるものだと捉えてみてください。</p>
+    </div>
+  `;
+}
+
+function buildWeaknessProseVision(coreKey){
+  const label = leafLabel(coreKey);
+  const info = leafInfo[coreKey];
+  return `
+    <div class="prep">
+      <p>今回の診断で見えてきたあなたの弱点は、「${label}」です。ただしここは、他の誰かに任せることができない、自分自身で育てていく領域でもあります。</p>
+      <p>心理学者エドワード・デシとリチャード・ライアンの自己決定理論という研究によると、人が心から前向きに動ける「内発的な動機づけ」は、自分の内側にある自律性・有能感・つながりの感覚から生まれるとされています。他人から押しつけられた目標や価値観では、本当の意味でのやる気にはつながりにくいこともわかっています。だからこそ、ビジョンや価値観に関わる部分は、誰かに肩代わりしてもらうことができないのです。</p>
+      <p>具体的には、${info.approach}</p>
+      <p>「${label}」は、今はまだ小さくても、自分のペースで育てていく領域だと捉えてみてください。それが、遠回りに見えて一番確実な伸ばし方です。</p>
+    </div>
+  `;
+}
+
+async function renderResult(){
+  phaseLabel.textContent = 'RESULT: 本質の落とし所';
+  subLabel.textContent = '';
+  renderProgress();
+
+  let coreKey = leafQuestions[0].key;
+  let minScore = Infinity;
+  let topKey = leafQuestions[0].key;
+  let maxScore = -Infinity;
+  leafQuestions.forEach(d=>{
+    if(leafScores[d.key] < minScore){ minScore = leafScores[d.key]; coreKey = d.key; }
+    if(leafScores[d.key] > maxScore){ maxScore = leafScores[d.key]; topKey = d.key; }
+  });
+
+  const coreCluster = clusterOf(coreKey);
+  const coreAxis = axisOfCluster(coreCluster);
+  const hasFuture = answersStore.futureVision && answersStore.futureVision.trim().length > 0;
+
+  let aiText = null;
+  let aiFailed = false;
+
+  if(hasFuture){
+    renderLoadingScreen();
+    try{
+      aiText = await fetchPersonalizedAdvice(topKey, coreKey, coreAxis);
+    } catch(e){
+      aiFailed = true;
+    }
+  }
+
+  finishResultRender(coreKey, topKey, coreCluster, coreAxis, aiText, aiFailed);
+}
+
+function renderLoadingScreen(){
+  card.innerHTML = `
+    <div class="mascot-wrap"><img src="assets/17.jpg" alt=""></div>
+    <div class="question">あなた専用のアドバイスを作成中...</div>
+    <p class="info-text" style="text-align:center;">入力してもらった未来像をもとに、AIがあなただけのメッセージを考えています。少しだけお待ちください。</p>
+    <div class="loading-spinner"></div>
+  `;
+}
+
+async function fetchPersonalizedAdvice(topKey, coreKey, coreAxis){
+  const topLabel = leafLabel(topKey);
+  const coreLabel = leafLabel(coreKey);
+  const strategyNote = (coreAxis === 'value')
+    ? 'この弱点はチームで補強すれば解決できるタイプの弱点です(得意な仲間に頼る方向で書いてください)'
+    : 'この弱点は他人に任せられない、自分自身のペースで育てていく必要があるタイプの弱点です(自分で育てる方向で書いてください)';
+
+  // 本番サイトでは /api/personalize (サーバー側の取り次ぎ役)にリクエストする。
+  // このプロトタイプをClaude.ai上で直接プレビューしている時は /api/personalize が存在しないため、
+  // 自動的にプレビュー専用の簡易モード(直接API呼び出し)にフォールバックする。
+  try{
+    const response = await fetch('/api/personalize', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        topLabel: topLabel,
+        coreLabel: coreLabel,
+        strategyNote: strategyNote,
+        age: answersStore.age || '',
+        gender: answersStore.gender || '',
+        futureVision: answersStore.futureVision
+      })
+    });
+    if(!response.ok){ throw new Error('proxy not available (status ' + response.status + ')'); }
+    const data = await response.json();
+    if(!data.message){ throw new Error('empty proxy response'); }
+    return data.message;
+  } catch(proxyError){
+    // --- プレビュー用フォールバック(本番の /api/personalize がまだ無い環境向け) ---
+    const prompt = 'あなたはパーソナルトレーナーのキャリア相談に乗るコーチです。以下の情報をもとに、日本語で3〜4文の、温かく背中を押すような短いメッセージを書いてください。専門用語は避け、話し言葉に近い自然な文章にしてください。前置きや見出しは不要で、メッセージ本文だけを出力してください。\n\n'
+      + '【診断でわかった強み】' + topLabel + '\n'
+      + '【診断でわかった弱点】' + coreLabel + '(' + strategyNote + ')\n'
+      + '【本人が回答した年齢】' + (answersStore.age || '未回答') + '\n'
+      + '【本人が回答した性別】' + (answersStore.gender || '未回答') + '\n'
+      + '【本人が思い描く理想の未来像】' + answersStore.futureVision + '\n\n'
+      + 'この未来像に対して、強みがどう追い風になるか、弱点とどう付き合っていけばいいかに具体的に触れながら書いてください。';
+
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 1000,
+        messages: [{ role: "user", content: prompt }]
+      })
+    });
+    const data = await response.json();
+    const text = data.content.map(function(item){ return item.type === "text" ? item.text : ""; }).filter(Boolean).join("\n");
+    const trimmed = text.trim();
+    if(!trimmed){ throw new Error('empty response'); }
+    return trimmed;
+  }
+}
+
+function finishResultRender(coreKey, topKey, coreCluster, coreAxis, aiText, aiFailed){
+  const r = leafInfo[coreKey];
+  const bridge = buildBridge(coreKey, r);
+  const weaknessHtml = (coreAxis === 'value')
+    ? buildWeaknessProseValue(coreKey, coreCluster)
+    : buildWeaknessProseVision(coreKey);
+  const weakIcon = (coreAxis === 'value') ? '🤝' : '🌱';
+  const clusterAvg = computeClusterAverages();
+  const radarSVG = buildRadarSVG(clusterAvg);
+
+  let futureBoxHtml = '';
+  if(answersStore.futureVision && answersStore.futureVision.trim().length > 0){
+    const bodyText = aiText ? aiText : ('"' + answersStore.futureVision + '"を目指す上で、「' + leafLabel(topKey) + '」という強みが追い風になり、「' + leafLabel(coreKey) + '」を意識することが近道になりそうです。');
+    const noteTag = aiFailed ? '<p class="fnote" style="font-size:10.5px;color:#B0A899;">※AIによる生成に失敗したため、簡易メッセージを表示しています。</p>' : '';
+    const badge = aiText ? '<span class="ai-badge">AIが生成</span>' : '';
+    futureBoxHtml = `
+      <div class="future-box">
+        <div class="ftitle">🌅 あなたの未来像に向けて ${badge}</div>
+        <p>"${answersStore.futureVision}"</p>
+        <p class="fnote">${bodyText}</p>
+        ${noteTag}
+      </div>
+    `;
+  }
+
+  card.innerHTML = `
+    <div class="mascot-wrap"><img src="${r.img}" alt=""></div>
+    <div class="result">
+      <div class="start-point">最初の入口: <b>${answersStore.concernLabel}</b> / 理想: <b>${answersStore.idealLabel}</b></div>
+      <h2>${r.title}</h2>
+
+      <div class="radar-section">
+        <div class="radar-title">総合バランス(5点満点・領域別平均)</div>
+        ${radarSVG}
+      </div>
+
+      <div class="bridge">${bridge}</div>
+
+      <div class="badge-block strength">
+        <div class="badge-header">
+          <div class="badge-icon">🏆</div>
+          <div class="badge-title-wrap">
+            <div class="badge-label strength">あなたの強み</div>
+            <div class="badge-title">${leafLabel(topKey)} <span class="badge-score">${scoreOutOf5(topKey)}/5点</span></div>
+          </div>
+        </div>
+        ${buildStrengthProse(topKey)}
+      </div>
+
+      <div class="badge-block weak">
+        <div class="badge-header">
+          <div class="badge-icon">${weakIcon}</div>
+          <div class="badge-title-wrap">
+            <div class="badge-label weak">あなたの弱点</div>
+            <div class="badge-title">${leafLabel(coreKey)} <span class="badge-score">${scoreOutOf5(coreKey)}/5点</span></div>
+          </div>
+        </div>
+        ${weaknessHtml}
+      </div>
+
+      <div class="tree">
+        <div class="tree-title">詳細スコア(全31項目・5点満点 / 赤=弱点 / 金=強み)</div>
+        ${renderTree(coreKey, topKey)}
+      </div>
+
+      <div class="next-step">
+        <span class="label">合わせて活用したい取り組み(${clusterLabels[coreCluster]}全般)</span>
+        ${renderToolList(clusterTools[coreCluster])}
+      </div>
+
+      <div class="universal-box">
+        <span class="label">全ての能力開発に共通する土台</span>
+        ${renderToolList(universalTools)}
+      </div>
+
+      ${futureBoxHtml}
+
+      <div class="objectivity-box">
+        <div class="otitle">🔍 最後に:この結果をもっと正確にするために</div>
+        <p>この診断は「自分で自分を採点する」自己評価です。とても大事な一歩ですが、限界もあります。心理学には「ジョハリの窓」という考え方があり、自分では気づいていないのに周りにはよく見えている部分(盲点)が、誰にでもあるとされています。自分の顔を鏡なしでは見られないのと同じで、自分の得意・不得意も、自分の目だけでは見えない部分があるのです。</p>
+        <p>あなたのことをよく知っている人物複数人に、このテストを使ってあなたのことを評価してもらうと、客観的なヒントが得られます。ぜひ、信頼できる先輩や同僚、上司にも一度試してもらってみてください。</p>
+      </div>
+
+      <button class="restart" id="restart">もう一度診断する</button>
+    </div>
+  `;
+  document.getElementById('restart').addEventListener('click', ()=>{
+    stepIndex = 0;
+    Object.keys(answersStore).forEach(k=> delete answersStore[k]);
+    leafQuestions.forEach(d=>{ leafScores[d.key] = 0; });
+    renderStep();
+  });
+}
+
+renderStep();
 </script>
 </body>
 </html>
