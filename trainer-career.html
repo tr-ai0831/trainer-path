@@ -168,23 +168,71 @@
   }
   .restart:hover{ border-color:var(--gold); color:var(--gold-soft); }
   .note{ margin-top:28px; font-size:10.5px; color:#5A5347; text-align:center; line-height:1.9; }
+
+  /* ===== HERO / LANDING ===== */
+  .hero{ text-align:center; padding:8px 4px 4px; }
+  .hero .hkicker{ font-size:10.5px; letter-spacing:.32em; color:var(--gold); font-weight:500; }
+  .hero .hrule-top{ width:1px; height:34px; background:var(--gold); margin:18px auto; opacity:.5; }
+  .hero h1{
+    font-family:'Shippori Mincho', serif; font-weight:600; font-size:34px; line-height:1.55;
+    margin:0 0 6px; color:var(--ivory); letter-spacing:.02em;
+  }
+  .hero h1 .accent{ color:var(--gold); }
+  .hero .hsub{ font-size:13.5px; line-height:2; color:var(--muted); max-width:340px; margin:22px auto 0; }
+  .hero .hrule{ width:36px; height:1px; background:var(--gold); margin:34px auto; opacity:.6; }
+  .hero-features{ display:flex; justify-content:center; gap:0; margin:0 auto 40px; max-width:420px; }
+  .hero-feature{ flex:1; padding:0 10px; border-left:1px solid var(--line); }
+  .hero-feature:first-child{ border-left:none; }
+  .hero-feature .hf-num{ font-family:'Shippori Mincho', serif; font-size:22px; color:var(--gold); font-weight:600; display:block; margin-bottom:6px; }
+  .hero-feature .hf-label{ font-size:10px; color:var(--muted); line-height:1.7; letter-spacing:.02em; }
+  .hero-start{
+    display:block; width:100%; padding:18px; border-radius:2px; border:1px solid var(--gold);
+    background:var(--gold); color:var(--bg); font-weight:600; font-size:14px; letter-spacing:.16em; cursor:pointer;
+    font-family:'Noto Sans JP', sans-serif; text-transform:uppercase; transition:opacity .2s ease;
+  }
+  .hero-start:hover{ opacity:.85; }
+  .hero-note{ margin-top:20px; font-size:11px; color:#5A5347; line-height:1.8; }
 </style>
 </head>
 <body>
 <div class="app">
-  <div class="brand">
-    <span class="kicker">TRAINER CAREER DOJO</span>
-    <h1>本質発見診断</h1>
-    <div class="rule"></div>
+
+  <div id="heroView">
+    <div class="hero">
+      <span class="hkicker">TRAINER CAREER DOJO</span>
+      <div class="hrule-top"></div>
+      <h1>あなたの迷いに、<br>白黒をつける。<br><span class="accent">本質発見診断</span></h1>
+      <p class="hsub">「知識が足りない」「環境が合わない」——そう思い込んでいるだけかもしれません。31の問いと現在地の棚卸しから、あなたの本当のボトルネックを、逃げ場なく特定します。</p>
+
+      <div class="hrule"></div>
+
+      <div class="hero-features">
+        <div class="hero-feature"><span class="hf-num">31</span><span class="hf-label">項目の<br>本質診断</span></div>
+        <div class="hero-feature"><span class="hf-num">05</span><span class="hf-label">分ほどで<br>完了</span></div>
+        <div class="hero-feature"><span class="hf-num">AI</span><span class="hf-label">による<br>個別診断</span></div>
+      </div>
+
+      <button class="hero-start" id="heroStart">診断をはじめる</button>
+      <p class="hero-note">回答は保存されません。正直に、直感で答えてください。</p>
+    </div>
   </div>
 
-  <div class="phase-label" id="phaseLabel"></div>
-  <div class="sub-label" id="subLabel"></div>
-  <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  <div id="quizView" style="display:none;">
+    <div class="brand">
+      <span class="kicker">TRAINER CAREER DOJO</span>
+      <h1>本質発見診断</h1>
+      <div class="rule"></div>
+    </div>
 
-  <div class="card" id="card"></div>
+    <div class="phase-label" id="phaseLabel"></div>
+    <div class="sub-label" id="subLabel"></div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
 
-  <div class="note">Rough Prototype — Premium Edition</div>
+    <div class="card" id="card"></div>
+
+    <div class="note">Rough Prototype — Premium Edition</div>
+  </div>
+
 </div>
 
 <script>
@@ -1058,46 +1106,23 @@ function buildRealityCheck(coreKey){
   `;
 }
 
-function buildAgeBenchmark(){
-  if(!answersStore.age){ return ''; }
-  const age = parseInt(answersStore.age, 10);
-  if(isNaN(age) || age <= 0){ return ''; }
-
+function buildProfileFallback(){
+  const hasAge = answersStore.age && String(answersStore.age).trim().length > 0;
   const hasAchievement = answersStore.achievement && answersStore.achievement.trim().length > 0;
   const hasQualification = answersStore.qualification && answersStore.qualification.trim().length > 0;
   const hasIncome = answersStore.income && answersStore.income.trim().length > 0;
-  const profileFilled = hasAchievement || hasQualification || hasIncome;
+  if(!hasAge && !hasAchievement && !hasQualification && !hasIncome){ return ''; }
 
-  if(!profileFilled){
-    return `
-      <div class="reality-box">
-        <div class="rtitle">現在地について、正直に言います</div>
-        <p>年収・実績・資格を教えてもらえなかったので、踏み込んだ評価はここまでにしておきます。ただ、この3つをすぐに言葉にできない状態そのものが、1つのサインです。今どこにいるかを直視できない人は、次にどこへ向かえばいいかも決められません。</p>
-      </div>
-    `;
-  }
-
-  let tierNote = '';
-  if(age < 25){
-    tierNote = 'この年代はまだ土台作りの時期です。実績や年収の絶対値より、どれだけ本気で基礎を積み上げているかが問われます。';
-  } else if(age < 30){
-    tierNote = 'この年代になると、専門性や実績が「なんとなく」ではなく、数字や資格として言葉にできているかが問われ始めます。';
-  } else if(age < 35){
-    tierNote = 'この年代は、個人としての実績に加えて、後輩育成やチームへの影響力まで問われる時期です。';
-  } else {
-    tierNote = 'この年代は、実績・年収・資格のいずれも、誰かに誇れる形で言語化できていることが期待される時期です。';
-  }
-
+  const ageText = hasAge ? answersStore.age + '歳' : '年齢未回答';
+  const incomeText = hasIncome ? answersStore.income : '未回答';
   const achievementText = hasAchievement ? answersStore.achievement : '特になし';
   const qualificationText = hasQualification ? answersStore.qualification : '特になし';
-  const incomeText = hasIncome ? answersStore.income : '未回答';
 
   return `
     <div class="reality-box">
-      <div class="rtitle">現在地について、正直に言います</div>
-      <p>${age}歳で、年収「${incomeText}」、実績「${achievementText}」、資格「${qualificationText}」。これが今、あなたが自分の言葉で示せる現在地です。</p>
-      <p>${tierNote}この現在地は、あなたが先ほど描いた未来像に対して、胸を張って「順調なペースだ」と言えるものですか。もし即答できなかったなら、それが答えです。これは才能の問題ではなく、行動の量とスピードの問題です。</p>
-      <p>年齢を言い訳にする時間はありません。今日から本気で取り組めば、十分に挽回できます。悠長に構えている余裕はない、というだけの話です。</p>
+      <div class="rtitle">あなたが教えてくれた現在地</div>
+      <p>${ageText} / 年収「${incomeText}」 / 実績「${achievementText}」 / 資格「${qualificationText}」。</p>
+      <p>今回はAIによる詳細な評価がうまく生成できませんでした。この現在地が理想の未来像にふさわしいペースかどうか、まずは自分自身で、そして信頼できる人にも見せて、率直な意見をもらってみてください。</p>
     </div>
   `;
 }
@@ -1118,12 +1143,16 @@ async function renderResult(){
 
   const coreCluster = clusterOf(coreKey);
   const coreAxis = axisOfCluster(coreCluster);
-  const hasFuture = answersStore.futureVision && answersStore.futureVision.trim().length > 0;
+  const hasProfileData = (answersStore.age && String(answersStore.age).trim().length > 0)
+    || (answersStore.income && answersStore.income.trim().length > 0)
+    || (answersStore.achievement && answersStore.achievement.trim().length > 0)
+    || (answersStore.qualification && answersStore.qualification.trim().length > 0)
+    || (answersStore.futureVision && answersStore.futureVision.trim().length > 0);
 
   let aiText = null;
   let aiFailed = false;
 
-  if(hasFuture){
+  if(hasProfileData){
     renderLoadingScreen();
     try{
       aiText = await fetchPersonalizedAdvice(topKey, coreKey, coreAxis);
@@ -1132,15 +1161,22 @@ async function renderResult(){
     }
   }
 
-  finishResultRender(coreKey, topKey, coreCluster, coreAxis, aiText, aiFailed);
+  finishResultRender(coreKey, topKey, coreCluster, coreAxis, aiText, aiFailed, hasProfileData);
 }
 
 function renderLoadingScreen(){
   card.innerHTML = `
-    <div class="question">あなた専用のアドバイスを作成中</div>
-    <p class="info-text">入力してもらった未来像をもとに、AIがあなただけのメッセージを考えています。少しだけお待ちください。</p>
+    <div class="question">あなた専用の診断コメントを作成中</div>
+    <p class="info-text">回答パターンと入力内容をもとに、AIがあなただけの診断コメントを考えています。少しだけお待ちください。</p>
     <div class="loading-spinner"></div>
   `;
+}
+
+function getTopBottomLeaves(n){
+  const sorted = leafQuestions.slice().sort(function(a,b){ return leafScores[b.key] - leafScores[a.key]; });
+  const top = sorted.slice(0, n).map(function(d){ return d.label; });
+  const bottom = sorted.slice(-n).map(function(d){ return d.label; }).reverse();
+  return { top: top, bottom: bottom };
 }
 
 async function fetchPersonalizedAdvice(topKey, coreKey, coreAxis){
@@ -1150,44 +1186,49 @@ async function fetchPersonalizedAdvice(topKey, coreKey, coreAxis){
     ? 'この弱点はチームで補強すれば解決できるタイプの弱点です(得意な仲間に頼る方向で書いてください)'
     : 'この弱点は他人に任せられない、自分自身のペースで育てていく必要があるタイプの弱点です(自分で育てる方向で書いてください)';
 
+  const tb = getTopBottomLeaves(3);
+  const clusterAvg = computeClusterAverages();
+  const clusterSummary = 'jiatama(地頭)=' + clusterAvg.jiatama.toFixed(1) + '/5, competency(対人対自己対課題)=' + clusterAvg.competency.toFixed(1) + '/5, expertise(専門力)=' + clusterAvg.expertise.toFixed(1) + '/5, belief(価値観信念)=' + clusterAvg.belief.toFixed(1) + '/5, adaptation(環境適応)=' + clusterAvg.adaptation.toFixed(1) + '/5';
+
+  const sharedFields = {
+    topLabel: topLabel,
+    coreLabel: coreLabel,
+    strategyNote: strategyNote,
+    topLeaves: tb.top.join('、'),
+    bottomLeaves: tb.bottom.join('、'),
+    clusterSummary: clusterSummary,
+    concern: answersStore.concernLabel || '未回答',
+    ideal: answersStore.idealLabel || '未回答',
+    work: answersStore.workLabel || '未回答',
+    life: answersStore.lifeLabel || '未回答',
+    effortMindset: answersStore.effortMindsetLabel || '未回答',
+    effortVolume: answersStore.effortVolumeLabel || '未回答',
+    age: answersStore.age || '未回答',
+    gender: answersStore.gender || '未回答',
+    income: answersStore.income || '未回答',
+    achievement: answersStore.achievement || '未回答',
+    qualification: answersStore.qualification || '未回答',
+    futureVision: (answersStore.futureVision && answersStore.futureVision.trim().length > 0) ? answersStore.futureVision : '未回答'
+  };
+
   try{
     const response = await fetch('/api/personalize', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        topLabel: topLabel,
-        coreLabel: coreLabel,
-        strategyNote: strategyNote,
-        age: answersStore.age || '',
-        gender: answersStore.gender || '',
-        income: answersStore.income || '',
-        achievement: answersStore.achievement || '',
-        qualification: answersStore.qualification || '',
-        futureVision: answersStore.futureVision
-      })
+      body: JSON.stringify(sharedFields)
     });
     if(!response.ok){ throw new Error('proxy not available (status ' + response.status + ')'); }
     const data = await response.json();
     if(!data.message){ throw new Error('empty proxy response'); }
     return data.message;
   } catch(proxyError){
-    const prompt = 'あなたはパーソナルトレーナーのキャリアを本気で考えるコーチです。以下の情報をもとに、日本語で4〜5文の、率直で妥協のないメッセージを書いてください。オブラートに包まず、現在地と理想のギャップをはっきり指摘してください。ただし「無理」「一生」「絶望」など、可能性を完全に否定する断定表現は使わないでください。行動量とスピードの問題として指摘し、最後は具体的な行動を促す形で締めてください。専門用語は避け、話し言葉に近い自然な文章にしてください。前置きや見出しは不要で、メッセージ本文だけを出力してください。\n\n'
-      + '【診断でわかった強み】' + topLabel + '\n'
-      + '【診断でわかった弱点】' + coreLabel + '(' + strategyNote + ')\n'
-      + '【本人が回答した年齢】' + (answersStore.age || '未回答') + '\n'
-      + '【本人が回答した性別】' + (answersStore.gender || '未回答') + '\n'
-      + '【本人が回答した年収】' + (answersStore.income || '未回答') + '\n'
-      + '【本人が回答した実績】' + (answersStore.achievement || '未回答') + '\n'
-      + '【本人が回答した資格】' + (answersStore.qualification || '未回答') + '\n'
-      + '【本人が思い描く理想の未来像】' + answersStore.futureVision + '\n\n'
-      + 'この未来像に対して、強みがどう追い風になるか、弱点とどう付き合っていけばいいかに具体的に触れながら書いてください。';
-
+    const prompt = buildComprehensivePrompt(sharedFields);
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         model: "claude-sonnet-4-6",
-        max_tokens: 1000,
+        max_tokens: 1200,
         messages: [{ role: "user", content: prompt }]
       })
     });
@@ -1199,30 +1240,54 @@ async function fetchPersonalizedAdvice(topKey, coreKey, coreAxis){
   }
 }
 
-function finishResultRender(coreKey, topKey, coreCluster, coreAxis, aiText, aiFailed){
+function buildComprehensivePrompt(f){
+  return 'あなたは、パーソナルトレーナーのキャリアを本気で考える、鋭い洞察力を持つコーチです。以下の情報をもとに、日本語で3段落構成の診断コメントを書いてください。\n\n'
+    + '【1段落目】回答パターンから読み取れる、この人の性格・行動特性の核心を言い当ててください。「あなたは〜というところがあります」という形で、読んだ本人が「確かに当たっている」と感じるような、具体的で的確な洞察にしてください。一般論ではなく、下記の「特に高いスコアの項目」「特に低いスコアの項目」を根拠に、なぜそう言えるのかが伝わるように書いてください。\n\n'
+    + '【2段落目】年齢・年収・実績・資格を、必ず1つずつ具体的に取り上げて評価してください。良い点は良いと明確に認め、物足りない点は物足りないとはっきり指摘してください。実績や資格が充実している場合は、その水準の高さを正当に評価した上で、それでもなお伸ばすべき点を指摘してください。逆に乏しい場合は、率直に指摘してください。全体として、この年齢・実績にふさわしいレベルにあるかを、辛口かつ公正に評価してください。「無理」「一生」など、可能性を完全に否定する断定表現は使わないでください。\n\n'
+    + '【3段落目】上記を踏まえ、本人が思い描く未来像に対して、強みがどう追い風になるか、弱点や現在地とどう向き合うべきかを、具体的な行動とともに述べてください。\n\n'
+    + '【診断で分かった特に高いスコアの項目(上位3つ)】' + f.topLeaves + '\n'
+    + '【診断で分かった特に低いスコアの項目(下位3つ)】' + f.bottomLeaves + '\n'
+    + '【5領域の平均バランス(5点満点)】' + f.clusterSummary + '\n'
+    + '【最終的な本質的伸びしろ】' + f.coreLabel + '(' + f.strategyNote + ')\n'
+    + '【最初に選んだキャリアの悩み】' + f.concern + '\n'
+    + '【本当はどうしたいか】' + f.ideal + '\n'
+    + '【今の仕事の状態】' + f.work + '\n'
+    + '【プライベートとのバランス】' + f.life + '\n'
+    + '【目標への意識】' + f.effortMindset + '\n'
+    + '【投下している努力量】' + f.effortVolume + '\n'
+    + '【年齢】' + f.age + '\n'
+    + '【性別】' + f.gender + '\n'
+    + '【年収】' + f.income + '\n'
+    + '【実績】' + f.achievement + '\n'
+    + '【資格】' + f.qualification + '\n'
+    + '【思い描く理想の未来像】' + f.futureVision + '\n\n'
+    + '前置きや見出しは不要で、本文のみを出力してください。専門用語は避け、自然な話し言葉にしてください。';
+}
+
+function finishResultRender(coreKey, topKey, coreCluster, coreAxis, aiText, aiFailed, hasProfileData){
   const r = leafInfo[coreKey];
   const bridge = buildBridge(coreKey, r);
   const realityCheck = buildRealityCheck(coreKey);
-  const ageBenchmark = buildAgeBenchmark();
   const weaknessHtml = (coreAxis === 'value')
     ? buildWeaknessProseValue(coreKey, coreCluster)
     : buildWeaknessProseVision(coreKey);
   const clusterAvg = computeClusterAverages();
   const radarSVG = buildRadarSVG(clusterAvg);
 
-  let futureBoxHtml = '';
-  if(answersStore.futureVision && answersStore.futureVision.trim().length > 0){
-    const bodyText = aiText ? aiText : ('"' + answersStore.futureVision + '"を目指す上で、「' + leafLabel(topKey) + '」という強みが追い風になり、「' + leafLabel(coreKey) + '」を意識することが近道になりそうです。');
-    const noteTag = aiFailed ? '<p class="fnote" style="font-size:10.5px;color:#5A5347;">※AIによる生成に失敗したため、簡易メッセージを表示しています。</p>' : '';
-    const badge = aiText ? '<span class="ai-badge">AI GENERATED</span>' : '';
-    futureBoxHtml = `
-      <div class="future-box">
-        <div class="ftitle">あなたの未来像に向けて ${badge}</div>
-        <p>"${answersStore.futureVision}"</p>
-        <p class="fnote">${bodyText}</p>
-        ${noteTag}
-      </div>
-    `;
+  let aiReportHtml = '';
+  if(hasProfileData){
+    if(aiText){
+      const paragraphs = aiText.split(/\n+/).filter(function(p){ return p.trim().length > 0; })
+        .map(function(p){ return '<p>' + p + '</p>'; }).join('');
+      aiReportHtml = `
+        <div class="future-box">
+          <div class="ftitle">AIによる総合診断コメント <span class="ai-badge">AI GENERATED</span></div>
+          ${paragraphs}
+        </div>
+      `;
+    } else {
+      aiReportHtml = buildProfileFallback();
+    }
   }
 
   card.innerHTML = `
@@ -1237,9 +1302,9 @@ function finishResultRender(coreKey, topKey, coreCluster, coreAxis, aiText, aiFa
 
       <div class="bridge">${bridge}</div>
 
-      ${realityCheck}
+      ${aiReportHtml}
 
-      ${ageBenchmark}
+      ${realityCheck}
 
       <div class="badge-block weak">
         <div class="badge-header">
@@ -1272,8 +1337,6 @@ function finishResultRender(coreKey, topKey, coreCluster, coreAxis, aiText, aiFa
         ${renderToolList(universalTools)}
       </div>
 
-      ${futureBoxHtml}
-
       <div class="objectivity-box">
         <div class="otitle">最後に — この結果をもっと正確にするために</div>
         <p>この診断は「自分で自分を採点する」自己評価です。とても大事な一歩ですが、限界もあります。心理学には「ジョハリの窓」という考え方があり、自分では気づいていないのに周りにはよく見えている部分(盲点)が、誰にでもあるとされています。自分の顔を鏡なしでは見られないのと同じで、自分の得意・不得意も、自分の目だけでは見えない部分があるのです。</p>
@@ -1291,7 +1354,11 @@ function finishResultRender(coreKey, topKey, coreCluster, coreAxis, aiText, aiFa
   });
 }
 
-renderStep();
+document.getElementById('heroStart').addEventListener('click', ()=>{
+  document.getElementById('heroView').style.display = 'none';
+  document.getElementById('quizView').style.display = 'block';
+  renderStep();
+});
 </script>
 </body>
 </html>
