@@ -195,6 +195,7 @@
     text-align:center; font-family:'Shippori Mincho', serif; font-size:15px; color:var(--gold-soft);
     line-height:1.9; max-width:300px; margin:24px auto 0; min-height:56px; transition:opacity .15s ease;
   }
+  .aphorism-author{ text-align:center; font-size:11px; color:var(--muted); margin-top:8px; letter-spacing:.05em; }
   @keyframes growline{ 0%,100%{ height:10px; opacity:.3; } 50%{ height:40px; opacity:1; } }
   .ai-badge{ display:inline-block; border:1px solid var(--gold); color:var(--gold); font-size:9px; font-weight:500; padding:2px 9px; border-radius:99px; vertical-align:middle; margin-left:8px; letter-spacing:.1em; }
 
@@ -1235,6 +1236,17 @@ function renderStep(){
         <label>あなたが思い描く、理想の未来像を教えてください</label>
         <textarea id="ffFuture" rows="4" placeholder="例: 3年後には自分の店を持って、地域で一番信頼されるトレーナーになりたい"></textarea>
       </div>
+      <div class="freeform-field">
+        <label>その未来像、いつまでに実現したいですか?</label>
+        <select id="ffDeadline">
+          <option value="">選択しない</option>
+          <option value="半年以内">半年以内</option>
+          <option value="1年以内">1年以内</option>
+          <option value="3年以内">3年以内</option>
+          <option value="5年以内">5年以内</option>
+          <option value="特に期限は決めていない">特に期限は決めていない</option>
+        </select>
+      </div>
       <button class="next-btn" id="nextBtn">診断結果を見る</button>
     `;
     document.getElementById('nextBtn').addEventListener('click', ()=>{
@@ -1263,6 +1275,7 @@ function renderStep(){
       answersStore.hasNationalQualification = selected.some(function(it){ return it.national; });
 
       answersStore.futureVision = document.getElementById('ffFuture').value;
+      answersStore.deadline = document.getElementById('ffDeadline').value;
       goNext();
     });
     return;
@@ -1449,11 +1462,20 @@ function buildRealityCheck(coreKey){
     : answersStore.idealLabel;
   const label = leafLabel(coreKey);
 
-  if(effortScore >= 5){
+  // 期限が近いほど、必要な努力量の基準(閾値)を引き上げる
+  const deadline = answersStore.deadline || '';
+  let threshold = 5;
+  let deadlineNote = '';
+  if(deadline === '半年以内'){ threshold = 6; deadlineNote = '半年という短い期限を選んだということは、それだけ高い密度の努力が要求されるということです。'; }
+  else if(deadline === '1年以内'){ threshold = 5; deadlineNote = '1年という期限であれば、油断せず着実に積み上げる必要があります。'; }
+  else if(deadline === '3年以内' || deadline === '5年以内'){ threshold = 4; deadlineNote = '期限に余裕がある分、焦る必要はありませんが、コツコツ続ける力が問われます。'; }
+  else if(deadline === '特に期限は決めていない'){ threshold = 4; deadlineNote = '期限を決めていないこと自体が、本気度を鈍らせている可能性があります。'; }
+
+  if(effortScore >= threshold){
     return `
       <div class="reality-box">
         <div class="rtitle">現実を直視してください — その上で、あなたへ</div>
-        <p>あなたは「${future}」という未来に対して、すでに正しい姿勢で取り組めています。「${mindsetLabel}」「${volumeLabel}」という状態は、実は多くの人ができていないことです。ここは素直に評価すべきところです。</p>
+        <p>あなたは「${future}」という未来に対して、すでに正しい姿勢で取り組めています。「${mindsetLabel}」「${volumeLabel}」という状態は、実は多くの人ができていないことです。${deadlineNote}ここは素直に評価すべきところです。</p>
         <p>ただし、油断は禁物です。今回見えた伸びしろ(「${label}」)に、今の努力と同じ本気度で向き合ってください。それができれば、あなたの未来は確実に近づきます。</p>
       </div>
     `;
@@ -1462,7 +1484,7 @@ function buildRealityCheck(coreKey){
   return `
     <div class="reality-box">
       <div class="rtitle">現実を直視してください</div>
-      <p>あなたは「${future}」という未来を望んでいます。しかし今の取り組みは、「${mindsetLabel}」「${volumeLabel}」という状態です。正直に言えば、この意識とこの量では、その未来には届きません。</p>
+      <p>あなたは「${future}」という未来を望んでいます。しかし今の取り組みは、「${mindsetLabel}」「${volumeLabel}」という状態です。${deadlineNote}正直に言えば、この意識とこの量では、その未来には届きません。</p>
       <p>悩んでいる本当の理由は、環境でも才能でもなく、目標に見合った行動量に達していない、ただそれだけの場合がほとんどです。「頑張っているつもり」と「目標から逆算して本来必要な努力量」の間には、大きな差があります。その差を埋めない限り、悩みは形を変えて何度でも戻ってきます。</p>
       <p>言い訳を並べる前に、まず今日から変えられることが必ずあります。この後に示す「${label}」への取り組みを、今日中に1つだけ具体的に始めてください。動き出した人にだけ、景色は変わります。</p>
     </div>
@@ -1530,26 +1552,26 @@ async function renderResult(){
 }
 
 const aphorisms = [
-  '悩んでいる時間も、行動しない言い訳になる。',
-  '才能より先に、行動量が試される。',
-  '昨日と同じ自分に、明日は変えられない。',
-  '弱みは隠すものではなく、任せるものだ。',
-  '強みは、使い切って初めて磨かれる。',
-  '知っていることと、やっていることは別物だ。',
-  '言い訳の数だけ、成長は遠ざかる。',
-  '小さな一歩が、大きな停滞を破る。',
-  '本気は、時間ではなく密度で測られる。',
-  '現状維持は、後退の別名だ。',
-  '未来は、今日の行動でしか変えられない。',
-  '一人で抱えるな。頼れる強さを持て。',
-  '答えは、動いた者にしか見えてこない。',
-  '準備が完璧になる日は、永遠に来ない。',
-  '成長は、居心地の悪さの先にある。',
-  '振り返らない者に、進歩はない。',
-  '自分を甘やかす言葉に、成長は宿らない。',
-  '継続できない目標は、目標ではなく願望だ。',
-  '限界は、自分で引いた線に過ぎない。',
-  '今日動いた者だけが、明日を選べる。'
+  { text:'千里の道も一歩から', author:'日本のことわざ' },
+  { text:'継続は力なり', author:'日本のことわざ' },
+  { text:'石の上にも三年', author:'日本のことわざ' },
+  { text:'塵も積もれば山となる', author:'日本のことわざ' },
+  { text:'七転び八起き', author:'日本のことわざ' },
+  { text:'案ずるより産むが易し', author:'日本のことわざ' },
+  { text:'好きこそ物の上手なれ', author:'日本のことわざ' },
+  { text:'備えあれば憂いなし', author:'日本のことわざ' },
+  { text:'急がば回れ', author:'日本のことわざ' },
+  { text:'実るほど頭を垂れる稲穂かな', author:'日本のことわざ' },
+  { text:'悩んでいる時間も、行動しない言い訳になる。', author:'道場訓' },
+  { text:'弱みは隠すものではなく、任せるものだ。', author:'道場訓' },
+  { text:'強みは、使い切って初めて磨かれる。', author:'道場訓' },
+  { text:'知っていることと、やっていることは別物だ。', author:'道場訓' },
+  { text:'小さな一歩が、大きな停滞を破る。', author:'道場訓' },
+  { text:'現状維持は、後退の別名だ。', author:'道場訓' },
+  { text:'一人で抱えるな。頼れる強さを持て。', author:'道場訓' },
+  { text:'準備が完璧になる日は、永遠に来ない。', author:'道場訓' },
+  { text:'継続できない目標は、目標ではなく願望だ。', author:'道場訓' },
+  { text:'今日動いた者だけが、明日を選べる。', author:'道場訓' }
 ];
 let aphorismIntervalId = null;
 function startAphorismRotation(){
@@ -1563,7 +1585,9 @@ function startAphorismRotation(){
     el.style.opacity = '0';
     setTimeout(function(){
       const el2 = document.getElementById('aphorismText');
-      if(el2){ el2.textContent = aphorisms[idx]; el2.style.opacity = '1'; }
+      const authorEl = document.getElementById('aphorismAuthor');
+      if(el2){ el2.textContent = aphorisms[idx].text; el2.style.opacity = '1'; }
+      if(authorEl){ authorEl.textContent = '— ' + aphorisms[idx].author; }
     }, 150);
   }
   pick();
@@ -1579,6 +1603,7 @@ function renderLoadingScreen(){
     <p class="info-text">回答パターンと入力内容をもとに、AIがあなただけの診断コメントを考えています。少しだけお待ちください。</p>
     <div class="loading-spinner"></div>
     <p class="aphorism-text" id="aphorismText"></p>
+    <p class="aphorism-author" id="aphorismAuthor"></p>
   `;
   startAphorismRotation();
 }
@@ -1624,7 +1649,8 @@ async function fetchPersonalizedAdvice(topKey, coreKey, coreAxis){
     qualification: answersStore.qualification || '未回答',
     hasNationalQualification: answersStore.hasNationalQualification ? 'あり(国家資格保有)' : 'なし',
     otherDegree: (answersStore.otherDegree && answersStore.otherDegree.trim().length > 0) ? answersStore.otherDegree.trim() : '',
-    futureVision: (answersStore.futureVision && answersStore.futureVision.trim().length > 0) ? answersStore.futureVision : '未回答'
+    futureVision: (answersStore.futureVision && answersStore.futureVision.trim().length > 0) ? answersStore.futureVision : '未回答',
+    deadline: answersStore.deadline || '未回答'
   };
 
   try{
@@ -1667,7 +1693,7 @@ function buildComprehensivePrompt(f){
   return 'あなたは、パーソナルトレーナーのキャリアを本気で考える、鋭い洞察力を持つコーチです。以下の情報をもとに、日本語で3段落構成の診断コメントを書いてください。\n\n'
     + '【1段落目】回答パターンから読み取れる、この人の性格・行動特性の核心を言い当ててください。この人は診断上「' + f.typeName + '」というタイプに分類されています。「あなたは〜というところがあります」という形で、読んだ本人が「確かに当たっている」と感じるような、具体的で的確な洞察にしてください。一般論ではなく、下記の「特に高いスコアの項目」「特に低いスコアの項目」を根拠に、なぜそう言えるのか、そしてなぜこのタイプに当てはまるのかが伝わるように書いてください。\n\n'
     + '【2段落目】年齢・年収・実績・資格を、必ず1つずつ具体的に取り上げて評価してください。良い点は良いと明確に認め、物足りない点は物足りないとはっきり指摘してください。実績や資格が充実している場合は、その水準の高さを正当に評価した上で、それでもなお伸ばすべき点を指摘してください。逆に乏しい場合は、率直に指摘してください。全体として、この年齢・実績にふさわしいレベルにあるかを、辛口かつ公正に評価してください。「無理」「一生」など、可能性を完全に否定する断定表現は使わないでください。もし「その他の学位」が記入されている場合は、その専門性を今のキャリアにどう活かせるか、具体的なヒントを必ず1つ盛り込んでください。\n\n'
-    + '【3段落目】上記を踏まえ、本人が思い描く未来像に対して、強みがどう追い風になるか、弱点や現在地とどう向き合うべきかを、具体的な行動とともに述べてください。\n\n'
+    + '【3段落目】上記を踏まえ、本人が思い描く未来像に対して、強みがどう追い風になるか、弱点や現在地とどう向き合うべきかを、具体的な行動とともに述べてください。必要な努力量を評価する際は、未来像がどれだけ野心的か(大きな目標か、控えめな目標か)と、下記の期限までの残り時間の両方を考慮してください。同じ努力量でも、目標が控えめで期限に余裕があれば十分な場合があり、目標が大きい、または期限が近ければ全く足りない場合があります。この点を機械的にではなく、内容を読んで判断してください。\n\n'
     + '【診断で分かった特に高いスコアの項目(上位3つ)】' + f.topLeaves + '\n'
     + '【診断で分かった特に低いスコアの項目(下位3つ)】' + f.bottomLeaves + '\n'
     + '【5領域の平均バランス(5点満点)】' + f.clusterSummary + '\n'
@@ -1685,7 +1711,8 @@ function buildComprehensivePrompt(f){
     + '【資格】' + f.qualification + '\n'
     + '【国家資格の保有】' + f.hasNationalQualification + '(国家資格を持っている場合は、その専門性と信頼性を高く評価してください。民間資格のみ、または資格なしの場合は、その点も踏まえて評価してください)\n'
     + '【その他の学位(選択肢にないもの)】' + (f.otherDegree || 'なし') + '\n'
-    + '【思い描く理想の未来像】' + f.futureVision + '\n\n'
+    + '【思い描く理想の未来像】' + f.futureVision + '\n'
+    + '【その未来像の実現期限】' + f.deadline + '\n\n'
     + '前置きや見出しは不要で、本文のみを出力してください。専門用語は避け、自然な話し言葉にしてください。';
 }
 
