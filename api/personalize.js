@@ -17,7 +17,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { topLabel, coreLabel, strategyNote, age, gender, futureVision } = req.body || {};
+    const { topLabel, coreLabel, strategyNote, age, gender, income, achievement, qualification, futureVision } = req.body || {};
 
     // 最低限、未来像だけは必須にする
     if (!futureVision || typeof futureVision !== 'string' || !futureVision.trim()) {
@@ -25,13 +25,16 @@ export default async function handler(req, res) {
     }
 
     const prompt =
-      'あなたはパーソナルトレーナーのキャリア相談に乗るコーチです。以下の情報をもとに、日本語で3〜4文の、温かく背中を押すような短いメッセージを書いてください。専門用語は避け、話し言葉に近い自然な文章にしてください。前置きや見出しは不要で、メッセージ本文だけを出力してください。\n\n' +
+      'あなたはパーソナルトレーナーのキャリアを本気で考えるコーチです。以下の情報をもとに、日本語で4〜5文の、率直で妥協のないメッセージを書いてください。オブラートに包まず、現在地と理想のギャップをはっきり指摘してください。ただし「無理」「一生」「絶望」など、可能性を完全に否定する断定表現は使わないでください。行動量とスピードの問題として指摘し、最後は具体的な行動を促す形で締めてください。専門用語は避け、話し言葉に近い自然な文章にしてください。前置きや見出しは不要で、メッセージ本文だけを出力してください。\n\n' +
       '【診断でわかった強み】' + (topLabel || '未回答') + '\n' +
       '【診断でわかった弱点】' + (coreLabel || '未回答') + '(' + (strategyNote || '') + ')\n' +
       '【本人が回答した年齢】' + (age || '未回答') + '\n' +
       '【本人が回答した性別】' + (gender || '未回答') + '\n' +
+      '【本人が回答した年収】' + (income || '未回答') + '\n' +
+      '【本人が回答した実績】' + (achievement || '未回答') + '\n' +
+      '【本人が回答した資格】' + (qualification || '未回答') + '\n' +
       '【本人が思い描く理想の未来像】' + futureVision + '\n\n' +
-      'この未来像に対して、強みがどう追い風になるか、弱点とどう付き合っていけばいいかに具体的に触れながら書いてください。';
+      'この未来像に対して、強みがどう追い風になるか、弱点とどう付き合っていけばいいか、そして年齢・年収・実績・資格が理想像に対して見合っているかに具体的に触れながら書いてください。';
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
