@@ -105,6 +105,17 @@
   .badge-score{ font-size:11px; font-weight:400; color:var(--muted); margin-left:8px; }
   .prep p{ margin:0 0 12px; font-size:13px; line-height:2; color:var(--muted); }
 
+  .action-list{ border-radius:2px; padding:16px 18px; margin:14px 0; }
+  .action-list.gold{ background:rgba(198,166,81,0.08); border-left:2px solid var(--gold); }
+  .action-list.brick{ background:rgba(168,91,78,0.08); border-left:2px solid var(--brick); }
+  .action-list-title{ font-size:10px; font-weight:500; letter-spacing:.14em; text-transform:uppercase; margin-bottom:10px; color:var(--gold-soft); }
+  .action-list.brick .action-list-title{ color:#D19488; }
+  .action-list ul{ margin:0; padding:0; list-style:none; }
+  .action-list li{ font-size:12.5px; line-height:1.9; color:var(--ivory); padding-left:16px; position:relative; margin-bottom:7px; }
+  .action-list li:last-child{ margin-bottom:0; }
+  .action-list.gold li::before{ content:'◆'; position:absolute; left:0; top:1px; font-size:8px; color:var(--gold); }
+  .action-list.brick li::before{ content:'◆'; position:absolute; left:0; top:1px; font-size:8px; color:var(--brick); }
+
   .tree{ margin: 24px 0; }
   .tree-title{ font-size:10px; font-weight:500; color:var(--muted); letter-spacing:.16em; margin-bottom:16px; text-transform:uppercase; }
   .tree-axis{ font-family:'Shippori Mincho', serif; font-size:14px; font-weight:600; margin:18px 0 8px; color:var(--gold-soft); }
@@ -177,19 +188,30 @@
   .note{ margin-top:28px; font-size:10.5px; color:#5A5347; text-align:center; line-height:1.9; }
 
   /* ===== HERO / LANDING ===== */
-  .hero{ text-align:center; padding:8px 4px 4px; }
+  .hero-frame{ position:relative; border:1px solid var(--line); padding:44px 24px 34px; overflow:hidden; }
+  .hero-frame::before{ content:''; position:absolute; inset:7px; border:1px solid rgba(198,166,81,0.32); pointer-events:none; }
+  .hero-frame::after{
+    content:''; position:absolute; top:-70px; left:50%; transform:translateX(-50%);
+    width:320px; height:320px; border-radius:50%;
+    background:radial-gradient(circle, rgba(198,166,81,0.18) 0%, rgba(198,166,81,0) 68%);
+    pointer-events:none;
+  }
+  .hero{ position:relative; text-align:center; z-index:1; background-image:repeating-linear-gradient(135deg, rgba(198,166,81,0.035) 0px, rgba(198,166,81,0.035) 1px, transparent 1px, transparent 15px); }
+  .hero-emblem{ display:block; margin:0 auto 14px; }
   .hero .hkicker{ font-size:10.5px; letter-spacing:.32em; color:var(--gold); font-weight:500; }
-  .hero .hrule-top{ width:1px; height:34px; background:var(--gold); margin:18px auto; opacity:.5; }
+  .hero-divider{ display:flex; align-items:center; justify-content:center; gap:9px; margin:16px 0; }
+  .hero-divider .hd-line{ width:32px; height:1px; background:var(--gold); opacity:.55; }
+  .hero-divider .hd-diamond{ width:5px; height:5px; background:var(--gold); transform:rotate(45deg); opacity:.85; }
   .hero h1{
-    font-family:'Shippori Mincho', serif; font-weight:600; font-size:34px; line-height:1.55;
+    font-family:'Shippori Mincho', serif; font-weight:600; font-size:32px; line-height:1.55;
     margin:0 0 6px; color:var(--ivory); letter-spacing:.02em;
   }
   .hero h1 .accent{ color:var(--gold); }
   .hero .hsub{ font-size:13.5px; line-height:2; color:var(--muted); max-width:340px; margin:22px auto 0; }
-  .hero .hrule{ width:36px; height:1px; background:var(--gold); margin:34px auto; opacity:.6; }
-  .hero-features{ display:flex; justify-content:center; gap:0; margin:0 auto 40px; max-width:420px; }
+  .hero-features{ display:flex; justify-content:center; gap:0; margin:36px auto 40px; max-width:420px; }
   .hero-feature{ flex:1; padding:0 10px; border-left:1px solid var(--line); }
   .hero-feature:first-child{ border-left:none; }
+  .hero-feature svg{ margin:0 auto 10px; display:block; }
   .hero-feature .hf-num{ font-family:'Shippori Mincho', serif; font-size:22px; color:var(--gold); font-weight:600; display:block; margin-bottom:6px; }
   .hero-feature .hf-label{ font-size:10px; color:var(--muted); line-height:1.7; letter-spacing:.02em; }
   .hero-start{
@@ -205,23 +227,38 @@
 <div class="app">
 
   <div id="heroView">
-    <div class="hero">
+    <div class="hero-frame"><div class="hero">
+      <svg class="hero-emblem" width="68" height="68" viewBox="0 0 72 72">
+        <circle cx="36" cy="36" r="34" fill="none" stroke="#C6A651" stroke-width="1"/>
+        <circle cx="36" cy="36" r="28" fill="none" stroke="#C6A651" stroke-width="0.5" opacity="0.5"/>
+        <line x1="24" y1="46" x2="24" y2="34" stroke="#C6A651" stroke-width="2"/>
+        <line x1="34" y1="46" x2="34" y2="26" stroke="#C6A651" stroke-width="2"/>
+        <line x1="44" y1="46" x2="44" y2="20" stroke="#C6A651" stroke-width="2"/>
+        <circle cx="44" cy="20" r="2.5" fill="#C6A651"/>
+      </svg>
       <span class="hkicker">TRAINER CAREER DOJO</span>
-      <div class="hrule-top"></div>
+      <div class="hero-divider"><span class="hd-line"></span><span class="hd-diamond"></span><span class="hd-line"></span></div>
       <h1>あなたの迷いに、<br>白黒をつける。<br><span class="accent">本質発見診断</span></h1>
       <p class="hsub">「知識が足りない」「環境が合わない」——そう思い込んでいるだけかもしれません。31の問いと現在地の棚卸しから、あなたの本当のボトルネックを、逃げ場なく特定します。</p>
 
-      <div class="hrule"></div>
-
       <div class="hero-features">
-        <div class="hero-feature"><span class="hf-num">31</span><span class="hf-label">項目の<br>本質診断</span></div>
-        <div class="hero-feature"><span class="hf-num">05</span><span class="hf-label">分ほどで<br>完了</span></div>
-        <div class="hero-feature"><span class="hf-num">AI</span><span class="hf-label">による<br>個別診断</span></div>
+        <div class="hero-feature">
+          <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9.5" fill="none" stroke="#C6A651" stroke-width="1"/><circle cx="11" cy="11" r="5.5" fill="none" stroke="#C6A651" stroke-width="1"/><circle cx="11" cy="11" r="1.6" fill="#C6A651"/></svg>
+          <span class="hf-num">31</span><span class="hf-label">項目の<br>本質診断</span>
+        </div>
+        <div class="hero-feature">
+          <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9.5" fill="none" stroke="#C6A651" stroke-width="1"/><line x1="11" y1="11" x2="11" y2="5.5" stroke="#C6A651" stroke-width="1"/><line x1="11" y1="11" x2="15" y2="13.5" stroke="#C6A651" stroke-width="1"/></svg>
+          <span class="hf-num">05</span><span class="hf-label">分ほどで<br>完了</span>
+        </div>
+        <div class="hero-feature">
+          <svg width="22" height="22" viewBox="0 0 22 22"><path d="M11 2 L13 9 L20 11 L13 13 L11 20 L9 13 L2 11 L9 9 Z" fill="none" stroke="#C6A651" stroke-width="1"/></svg>
+          <span class="hf-num">AI</span><span class="hf-label">による<br>個別診断</span>
+        </div>
       </div>
 
       <button class="hero-start" id="heroStart">診断をはじめる</button>
       <p class="hero-note">回答は保存されません。正直に、直感で答えてください。</p>
-    </div>
+    </div></div>
   </div>
 
   <div id="quizView" style="display:none;">
@@ -659,6 +696,133 @@ const leafInfo = {
     approach:"「なぜこの仕事をしているのか」を、人に説明するつもりで書き出してみる人生計画ワークが効果的です。 よくある間違いは、『とりあえず仕事だから』で済ませ、なぜこの仕事を選んだかを忘れてしまっていることです。『なぜこの仕事をしているのか』を、100字で書き出してみてください。" }
 };
 
+const leafActions = {
+  verbal: {
+    strengthActions: ['週1回、社内勉強会やSNSで学びを発信して言語化力を鍛える','難解な専門知識を、新人にもわかる言葉で説明する役を買って出る','自分の言語化ノウハウをテンプレート化してチームに共有する'],
+    weaknessActions: ['資料作成やマニュアル整備は、文章が得意な同僚に一部を任せる','顧客への説明が必要な場面は、言語化が得意な先輩に同席してもらう','外部のライティング講座やコピーライティング研修を活用する']
+  },
+  numeric: {
+    strengthActions: ['店舗やチームの数字をグラフ化し、毎週の会議で発表する役を担う','売上や稼働率の分析を任せてもらい、経営判断の材料を提供する','数字が苦手なメンバーに、簡単な指標の読み方を教える'],
+    weaknessActions: ['数字の集計・分析は、得意なスタッフや税理士・経営コンサルに任せる','エクセルやBIツールの使い方を、詳しい人に教わる時間を作る','会計・データ分析の外部研修や講座を活用する']
+  },
+  logical: {
+    strengthActions: ['会議で「論点整理役」を買って出て、議論をまとめる','複雑な意思決定にフレームワークを使って参加する','後輩の相談に、筋道立てたアドバイスをする機会を増やす'],
+    weaknessActions: ['重要な意思決定は、論理的思考が得意な同僚や上司に壁打ちしてもらう','複雑な問題は、外部のコンサルタントやメンターに相談する','ロジカルシンキング研修を受講する']
+  },
+  creative: {
+    strengthActions: ['新企画やサービス開発のブレストに、積極的に参加・発案する','「今のやり方を疑う」役割として、改善提案を定期的に出す','アイデアを形にする小さなプロジェクトを、自分から立ち上げる'],
+    weaknessActions: ['新しい発想が必要な場面は、企画力のある同僚とペアで取り組む','外部のアイデアワークショップやデザイン思考研修に参加する','他業種のセミナーやイベントから刺激を借りてくる']
+  },
+  affinity: {
+    strengthActions: ['新規のお客様対応や、新人・後輩の受け入れ役を積極的に担う','社内外のイベントで、人と人をつなぐ役割を担う','人当たりの良さを、紹介・口コミの獲得に活かす'],
+    weaknessActions: ['初対面が苦手な場面は、親しみやすい同僚に同席してもらう','接客が得意なスタッフの対応を観察し、真似できる部分を盗む','接客・コミュニケーション研修を受講する']
+  },
+  collaboration: {
+    strengthActions: ['プロジェクトのハブ役として、周りを巻き込む役割を担う','チームの成果を、あえて自分の手柄にせず共有する','協力してもらった相手に、感謝をきちんと言葉で伝える'],
+    weaknessActions: ['一人で抱え込みそうな仕事は、最初からチームで分担する','頼るのが苦手なら、まず小さなタスクを1つ人に振ってみる','チームビルディング研修やワークショップに参加する']
+  },
+  leadership: {
+    strengthActions: ['小さなプロジェクトのリーダーを、積極的に引き受ける','後輩育成の主担当として、育成計画を任せてもらう','朝礼や会議の進行役を、率先して担う'],
+    weaknessActions: ['リーダー役が不安なら、経験豊富な上司にメンターになってもらう','統率力のある同僚に、チームの一部運営を手伝ってもらう','リーダーシップ研修やコーチング講座を受ける']
+  },
+  emotion_control: {
+    strengthActions: ['トラブル対応やクレーム対応の窓口役を担う','感情的になりやすいメンバーのフォロー役になる','冷静さを活かし、緊急時の判断役を任せてもらう'],
+    weaknessActions: ['感情が乱れやすい業務は、落ち着いた同僚とペアで対応する','感情のコントロールが必要な場面の前に、信頼できる人に相談する','アンガーマネジメント研修を受講する']
+  },
+  self_esteem: {
+    strengthActions: ['自分の成功体験を、後輩に共有して勇気づける役になる','新しい挑戦を率先して引き受け、行動で自信を示す','日誌に成果を記録し、定期的にチームにも共有する'],
+    weaknessActions: ['自信が持てない場面は、信頼できる上司や同僚に率直に相談する','小さな成功体験を一緒に確認してくれるメンター役を見つける','自己効力感を高める研修やコーチングを受ける']
+  },
+  persistence: {
+    strengthActions: ['長期プロジェクトの推進役や、継続的な取り組みの旗振り役を担う','継続の仕組み(チェックリストや習慣化アプリ)をチームに共有する','途中で挫折しそうなメンバーの伴走役になる'],
+    weaknessActions: ['続けるのが苦手な取り組みは、進捗確認を頼める相手を見つける','一緒に取り組む仲間(アカウンタビリティパートナー)を作る','習慣化・継続に関する研修や書籍を活用する']
+  },
+  problem_finding: {
+    strengthActions: ['店舗やチームの改善提案役として、気づきを積極的に発信する','「小さな違和感」をメモする文化を、チームに広める','定期的な現場チェックの担当を買って出る'],
+    weaknessActions: ['課題の洗い出しは、気づきの鋭い同僚と一緒に行う','外部の視点(覆面調査や第三者評価)を取り入れる','課題発見力を鍛える研修やワークショップに参加する']
+  },
+  planning: {
+    strengthActions: ['四半期計画やプロジェクトの設計役を担う','チームの目標設定を、逆算思考でサポートする','計画のテンプレートを作り、チームで使い回せるようにする'],
+    weaknessActions: ['計画を立てるのが苦手なら、得意な同僚と一緒に作る','上司やメンターに、計画のレビューをお願いする','プロジェクトマネジメント研修を受講する']
+  },
+  execution: {
+    strengthActions: ['新しい施策の実行担当として、周りより先に動く','「まず自分がやってみる」役割を買って出る','実行のスピード感を、チームのお手本として見せる'],
+    weaknessActions: ['実行に移すのが苦手な業務は、動くのが得意な同僚に一部任せる','小さく試してもらう「実行パートナー」を見つける','タスク管理・実行力に関する研修を受ける']
+  },
+  knowledge_expert: {
+    strengthActions: ['勉強会の講師役や、新人教育のカリキュラム作りに関わる','専門知識をまとめた資料やマニュアルを作成する','お客様への説明に、専門知識の深さを活かす'],
+    weaknessActions: ['専門知識が必要な場面は、詳しい同僚や外部専門家に確認する','資格取得のための講座や勉強会に外部の力を借りる','わからないことをその場で聞ける関係性を先輩と作る']
+  },
+  knowledge_service: {
+    strengthActions: ['接客マニュアルの整備役や、新人への接客指導役を担う','お客様心理の知見を、チームの接客改善に活かす','サービス向上の提案を、積極的に出す'],
+    weaknessActions: ['接客の知識が必要な場面は、接客が得意な同僚に相談する','覆面調査やお客様アンケートなど、外部の評価を取り入れる','接客・ホスピタリティ研修を受講する']
+  },
+  knowledge_liberal: {
+    strengthActions: ['専門的すぎない例え話で、お客様やチームに説明する橋渡し役になる','異分野の知見を、新しい企画のヒントとして提供する','社内勉強会で、専門外のテーマを紹介する'],
+    weaknessActions: ['幅広い知識が必要な場面は、詳しい同僚や外部の専門家を頼る','読書会やオンライン講座など、外部のインプットの場を活用する','異業種交流会に参加して視野を広げる']
+  },
+  skill_expert: {
+    strengthActions: ['店舗研修での実技指導役や、難しいケースの相談役を担う','自分の技術をマニュアル化して、チームの資産にする','技術力の高さを、指名や紹介の獲得に活かす'],
+    weaknessActions: ['技術面が不安な施術・指導は、経験豊富な先輩に同席してもらう','外部の技術研修やセミナーで、専門家から直接学ぶ','難しいケースは、無理せず得意な同僚に引き継ぐ']
+  },
+  skill_service: {
+    strengthActions: ['お客様満足度に直結する対応をマニュアル化し、チームに共有する','接客の成功パターンを、後輩に実演して見せる','クレームや難しい対応の解決役を担う'],
+    weaknessActions: ['接客対応に自信がない場面は、得意な同僚に見てもらいフィードバックをもらう','ロールプレイ研修を、外部講師を招いて実施する','苦手なタイプのお客様対応は、先輩に同席してもらう']
+  },
+  skill_business: {
+    strengthActions: ['店舗の集客施策や新しい仕組みづくりの推進役を担う','売上データをもとに、改善提案を経営陣に出す','集客の成功事例を、チームで共有・横展開する'],
+    weaknessActions: ['集客や販売の仕組みは、得意な同僚やマーケティング会社に相談する','経営・マーケティングの外部セミナーで基礎を学ぶ','小さな施策から、詳しい人に伴走してもらいながら始める']
+  },
+  experience: {
+    strengthActions: ['自分の物語を言葉にして、SNSやセミナーで発信する','原体験をもとにした指導方針を、明文化してお客様に伝える','同じような境遇の人に向けたメッセージを発信する'],
+    weaknessActions: ['半年に1回、自分の人生の転機を年表にして棚卸しする','信頼できる人に、自分の半生を話す機会を意図的に作る','過去の出来事を振り返る「人生計画ワーク」を定期的に行う']
+  },
+  fiction: {
+    strengthActions: ['憧れの人物像を、自分のブランディングに落とし込む','影響を受けた作品の世界観を、指導スタイルに取り入れる','理想像を言葉にして、目標設定に活かす'],
+    weaknessActions: ['影響を受けた作品や人物を、あえて言葉にして書き出す','憧れの人に直接会いに行く、話を聞きに行く機会を作る','定期的に新しい物語や人物に触れる時間を持つ']
+  },
+  era: {
+    strengthActions: ['世代を超えたコミュニケーションの橋渡し役を担う','時代背景を踏まえたマーケティングやコンテンツ発信をする','自分の価値観のルーツを、若手育成に活かす'],
+    weaknessActions: ['自分が育った時代の出来事を、定期的に振り返る時間を持つ','異なる世代の人と対話し、価値観の違いを言語化する','自分史や年表を書き、時代との接点を可視化する']
+  },
+  instinct: {
+    strengthActions: ['とっさの判断が求められる現場対応で、直感を積極的に発揮する','直感的な気づきを、その場でメモして言語化する習慣を持つ','感覚的な強みを、独自の指導スタイルとして確立する'],
+    weaknessActions: ['迷った時、まず直感で答えを出してから理由を考える練習をする','直感が働いた瞬間を、日誌に記録して振り返る','感覚を信じる小さな意思決定を、日常的に増やす']
+  },
+  personality: {
+    strengthActions: ['自分の個性を前面に出したブランディングや発信をする','「自分らしさ」を武器に、他との差別化を図る','個性を活かした指導スタイルを、確立して発信する'],
+    weaknessActions: ['信頼できる人に「自分らしいと思う瞬間」を聞いてみる','自分の個性を書き出し、言語化する時間を作る','周りに合わせすぎていないか、定期的に自分に問いかける']
+  },
+  self_esteem_env: {
+    strengthActions: ['その安定感を活かし、悩んでいる後輩の話を聞く役割を担う','自分を受け入れる姿勢を、チームの心理的安全性づくりに活かす','ポジティブな自己認識を、周りにも自然に伝播させる'],
+    weaknessActions: ['1日の終わりに「今日の自分の良かったところ」を1つ書き出す','自分の欠点だけでなく、長所も意識的に数える習慣を持つ','信頼できる人からの前向きな言葉を、記録して読み返す']
+  },
+  self_efficacy: {
+    strengthActions: ['新しい挑戦を率先して引き受け、チームの推進力になる','小さな成功体験を、周りにも積極的に共有する','「自分ならできる」という姿勢を、後輩のロールモデルにする'],
+    weaknessActions: ['小さな成功体験を意図的に積み重ね、日誌に記録する','新しい挑戦を、あえて小さく分解して着手する','過去にやり遂げたことを、定期的に振り返る']
+  },
+  self_importance: {
+    strengthActions: ['安定した存在感を活かし、チームの中心的な役割を担う','感謝された経験を、モチベーションの源として活かす','自分の必要性を、後輩育成やチーム貢献で示す'],
+    weaknessActions: ['感謝された言葉や出来事を、記録して読み返す習慣を持つ','自分がチームにどう貢献しているか、定期的に言語化する','誰かの役に立てた瞬間を、意識的に見つける']
+  },
+  curiosity_knowledge: {
+    strengthActions: ['学んだことをチームに共有する「学びのハブ」役を担う','新しい知識を、積極的に現場で試して発信する','好奇心を活かし、新しい取り組みの発案者になる'],
+    weaknessActions: ['興味のあるテーマを1つ決め、毎週少しずつインプットする','新しい分野の情報に触れる時間を、意図的にスケジュールに入れる','学びを記録するノートや発信の場を作る']
+  },
+  growth_feeling: {
+    strengthActions: ['定期的な振り返りの習慣を、周りにも共有し広める','自分の成長ストーリーを、後輩育成のヒントとして伝える','成長を実感できる仕組みを、チームにも取り入れる'],
+    weaknessActions: ['月に一度、半年前の自分と今の自分を比べて書き出す','小さな進歩でも、意識的に記録して認める','定期的な振り返りの時間を、カレンダーに組み込む']
+  },
+  crisis_sense: {
+    strengthActions: ['チームや店舗の変化を先取りする「気づき役」として発信する','業界の変化を、チームの学びの機会に変える','健全な危機感を、行動の推進力として活かす'],
+    weaknessActions: ['業界や競合の最新情報を、定期的に調べる時間を作る','「今のままで大丈夫か」を、定期的に自分に問いかける','変化を先取りしている人の発信を、意識的にフォローする']
+  },
+  mission_sense: {
+    strengthActions: ['自分の想いを言葉にして発信し、チームやお客様を巻き込む','使命感を、後輩育成やチームの目標設定に反映させる','「なぜこの仕事をしているか」を、採用やブランディングに活かす'],
+    weaknessActions: ['「なぜこの仕事をしているのか」を、100字で書き出してみる','人生計画ワークで、自分の使命を言語化する時間を作る','尊敬する人に、仕事への想いを聞いてみる']
+  }
+};
+
 const clusterLabels = { jiatama:'地頭', competency:'対人・対自己・対課題', expertise:'専門力', belief:'価値観信念', adaptation:'環境適応' };
 const clusterTools = {
   jiatama: [
@@ -955,6 +1119,10 @@ function renderStep(){
         <div class="qual-checklist">${renderQualificationChecklist()}</div>
       </div>
       <div class="freeform-field">
+        <label>その他の学位(修士・博士など、上の選択肢にない場合。分野も書いてください)</label>
+        <input type="text" id="ffOtherDegree" placeholder="例: 経営学修士(MBA)、教育学博士">
+      </div>
+      <div class="freeform-field">
         <label>あなたが思い描く、理想の未来像を教えてください</label>
         <textarea id="ffFuture" rows="4" placeholder="例: 3年後には自分の店を持って、地域で一番信頼されるトレーナーになりたい"></textarea>
       </div>
@@ -965,11 +1133,15 @@ function renderStep(){
       answersStore.gender = document.getElementById('ffGender').value;
       answersStore.income = document.getElementById('ffIncome').value;
       answersStore.achievement = document.getElementById('ffAchievement').value;
+      answersStore.otherDegree = document.getElementById('ffOtherDegree').value;
 
       const checked = Array.from(document.querySelectorAll('input[name="ffQual"]:checked')).map(function(el){ return el.value; });
       const allItems = qualificationOptions.reduce(function(acc, g){ return acc.concat(g.items); }, []);
       const selected = allItems.filter(function(it){ return checked.indexOf(it.key) !== -1 && it.key !== 'none'; });
-      answersStore.qualification = selected.length > 0 ? selected.map(function(it){ return it.label; }).join('、') : '特になし';
+      const checklistLabels = selected.map(function(it){ return it.label; });
+      const otherDegreeText = answersStore.otherDegree && answersStore.otherDegree.trim().length > 0 ? [answersStore.otherDegree.trim()] : [];
+      const allQualLabels = checklistLabels.concat(otherDegreeText);
+      answersStore.qualification = allQualLabels.length > 0 ? allQualLabels.join('、') : '特になし';
       answersStore.hasNationalQualification = selected.some(function(it){ return it.national; });
 
       answersStore.futureVision = document.getElementById('ffFuture').value;
@@ -1097,14 +1269,22 @@ function buildBridge(coreKey, r){
   return `最初は「${concernLabel}」という入り口だったけど、掘り下げてみると、多くの人が思い込みがちな「知識・技術・環境のせい」ではなく、実は「${r.title}」に本当の伸びしろがありそうです。`;
 }
 
+function renderActionList(items, tone){
+  return '<div class="action-list ' + tone + '"><div class="action-list-title">今日から動くなら、この3つ</div><ul>'
+    + items.map(function(a){ return '<li>' + a + '</li>'; }).join('')
+    + '</ul></div>';
+}
+
 function buildStrengthProse(topKey){
   const label = leafLabel(topKey);
   const info = leafInfo[topKey];
+  const actions = leafActions[topKey] ? leafActions[topKey].strengthActions : [];
   return `
     <div class="prep">
       <p>はっきり言います。「${label}」は、あなたが誇っていい、本物の武器です。ここを軽く見てはいけません。多くの人が一生かけても手に入れられないものを、あなたはすでに持っています。</p>
       <p>ギャラップ社が45か国・120万人以上を対象に行った大規模な調査では、マネジャーが強みに注目したチームは、弱みばかりに注目したチームに比べて、やる気のある人とない人の比率が60対1にもなったのに対し、弱み重視のチームでは2対1にとどまったと報告されています。弱点の克服にエネルギーを使うより、強みを伸ばし切る方が、圧倒的に成果と充実感につながります。</p>
       <p>具体的には、${info.strengthText}</p>
+      ${renderActionList(actions, 'gold')}
       <p>そしてこれは、あなた一人のためだけの力ではありません。この強みを、目の前のお客様、後輩、チーム、そして地域や社会にまで惜しみなく還元してください。強みを出し惜しみする人生と、使い切る人生とでは、周りに与えられる価値も、自分自身の充実感もまったく違います。「${label}」を武器に、堂々と、自分の人生を謳歌してください。</p>
     </div>
   `;
@@ -1113,11 +1293,13 @@ function buildStrengthProse(topKey){
 function buildWeaknessProseValue(coreKey, coreCluster){
   const label = leafLabel(coreKey);
   const info = leafInfo[coreKey];
+  const actions = leafActions[coreKey] ? leafActions[coreKey].weaknessActions : [];
   return `
     <div class="prep">
       <p>今回の診断で見えてきたあなたの弱点は、「${label}」です。厳しいことを言いますが、この弱点を放置したまま「なんとなく頑張っている」つもりになっている限り、あなたが望む未来には届きません。まずこの事実を、正面から受け止めてください。</p>
       <p>イギリスの研究者メレディス・ベルビンによるチーム研究では、どんな優秀な人にも「強みとセットになった、仕方のない弱さ」があり、それを一人でゼロにしようとするより、チーム全体で補い合う方がうまくいくことがわかっています。ただし、これは「何もしなくていい」という意味ではありません。放置していい弱点と、放置していい言い訳にしている弱点は別物です。</p>
       <p>${info.approach} また、日頃から「${clusterLabels[coreCluster]}」が得意なスタッフに、率直に頼ったり教えてもらったりする関係を、今週中に1つ作ってください。</p>
+      ${renderActionList(actions, 'brick')}
       <p>「${label}」は、あなた一人の課題ではなく、チームで補強すればどうにでもなるものです。ただし、それは「今日、最初の一歩を動かした人」だけに与えられる結果です。</p>
     </div>
   `;
@@ -1126,11 +1308,13 @@ function buildWeaknessProseValue(coreKey, coreCluster){
 function buildWeaknessProseVision(coreKey){
   const label = leafLabel(coreKey);
   const info = leafInfo[coreKey];
+  const actions = leafActions[coreKey] ? leafActions[coreKey].weaknessActions : [];
   return `
     <div class="prep">
       <p>今回の診断で見えてきたあなたの弱点は、「${label}」です。厳しいことを言いますが、ここは他の誰かに肩代わりしてもらうことができない領域です。「環境が変われば」「誰かに背中を押してもらえたら」という発想自体が、この弱点を放置する言い訳になっている可能性があります。</p>
       <p>心理学者エドワード・デシとリチャード・ライアンの自己決定理論という研究によると、人が心から前向きに動ける「内発的な動機づけ」は、自分の内側にある自律性・有能感・つながりの感覚から生まれるとされています。他人から押しつけられた目標や価値観では、本当の意味でのやる気にはつながりません。だからこそ、これはあなた自身が今、向き合う以外に方法がないのです。</p>
       <p>${info.approach}</p>
+      ${renderActionList(actions, 'brick')}
       <p>「${label}」は、今はまだ小さくても、自分のペースで育てていく領域です。ただし「いつか」ではなく「今日」から始めてください。先延ばしにした分だけ、望む未来は遠ざかります。</p>
     </div>
   `;
@@ -1271,6 +1455,7 @@ async function fetchPersonalizedAdvice(topKey, coreKey, coreAxis){
     achievement: answersStore.achievement || '未回答',
     qualification: answersStore.qualification || '未回答',
     hasNationalQualification: answersStore.hasNationalQualification ? 'あり(国家資格保有)' : 'なし',
+    otherDegree: (answersStore.otherDegree && answersStore.otherDegree.trim().length > 0) ? answersStore.otherDegree.trim() : '',
     futureVision: (answersStore.futureVision && answersStore.futureVision.trim().length > 0) ? answersStore.futureVision : '未回答'
   };
 
@@ -1313,7 +1498,7 @@ async function fetchPersonalizedAdvice(topKey, coreKey, coreAxis){
 function buildComprehensivePrompt(f){
   return 'あなたは、パーソナルトレーナーのキャリアを本気で考える、鋭い洞察力を持つコーチです。以下の情報をもとに、日本語で3段落構成の診断コメントを書いてください。\n\n'
     + '【1段落目】回答パターンから読み取れる、この人の性格・行動特性の核心を言い当ててください。「あなたは〜というところがあります」という形で、読んだ本人が「確かに当たっている」と感じるような、具体的で的確な洞察にしてください。一般論ではなく、下記の「特に高いスコアの項目」「特に低いスコアの項目」を根拠に、なぜそう言えるのかが伝わるように書いてください。\n\n'
-    + '【2段落目】年齢・年収・実績・資格を、必ず1つずつ具体的に取り上げて評価してください。良い点は良いと明確に認め、物足りない点は物足りないとはっきり指摘してください。実績や資格が充実している場合は、その水準の高さを正当に評価した上で、それでもなお伸ばすべき点を指摘してください。逆に乏しい場合は、率直に指摘してください。全体として、この年齢・実績にふさわしいレベルにあるかを、辛口かつ公正に評価してください。「無理」「一生」など、可能性を完全に否定する断定表現は使わないでください。\n\n'
+    + '【2段落目】年齢・年収・実績・資格を、必ず1つずつ具体的に取り上げて評価してください。良い点は良いと明確に認め、物足りない点は物足りないとはっきり指摘してください。実績や資格が充実している場合は、その水準の高さを正当に評価した上で、それでもなお伸ばすべき点を指摘してください。逆に乏しい場合は、率直に指摘してください。全体として、この年齢・実績にふさわしいレベルにあるかを、辛口かつ公正に評価してください。「無理」「一生」など、可能性を完全に否定する断定表現は使わないでください。もし「その他の学位」が記入されている場合は、その専門性を今のキャリアにどう活かせるか、具体的なヒントを必ず1つ盛り込んでください。\n\n'
     + '【3段落目】上記を踏まえ、本人が思い描く未来像に対して、強みがどう追い風になるか、弱点や現在地とどう向き合うべきかを、具体的な行動とともに述べてください。\n\n'
     + '【診断で分かった特に高いスコアの項目(上位3つ)】' + f.topLeaves + '\n'
     + '【診断で分かった特に低いスコアの項目(下位3つ)】' + f.bottomLeaves + '\n'
@@ -1331,6 +1516,7 @@ function buildComprehensivePrompt(f){
     + '【実績】' + f.achievement + '\n'
     + '【資格】' + f.qualification + '\n'
     + '【国家資格の保有】' + f.hasNationalQualification + '(国家資格を持っている場合は、その専門性と信頼性を高く評価してください。民間資格のみ、または資格なしの場合は、その点も踏まえて評価してください)\n'
+    + '【その他の学位(選択肢にないもの)】' + (f.otherDegree || 'なし') + '\n'
     + '【思い描く理想の未来像】' + f.futureVision + '\n\n'
     + '前置きや見出しは不要で、本文のみを出力してください。専門用語は避け、自然な話し言葉にしてください。';
 }
