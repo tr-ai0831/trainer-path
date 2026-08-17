@@ -34,6 +34,7 @@ export default async function handler(req, res) {
     const income = b.income || '未回答';
     const achievement = b.achievement || '未回答';
     const qualification = b.qualification || '未回答';
+    const hasNationalQualification = b.hasNationalQualification || 'なし';
     const futureVision = b.futureVision || '未回答';
 
     // 最低限、何かしらのプロフィール情報が無ければ生成しない
@@ -64,6 +65,7 @@ export default async function handler(req, res) {
       '【年収】' + income + '\n' +
       '【実績】' + achievement + '\n' +
       '【資格】' + qualification + '\n' +
+      '【国家資格の保有】' + hasNationalQualification + '(国家資格を持っている場合は、その専門性と信頼性を高く評価してください。民間資格のみ、または資格なしの場合は、その点も踏まえて評価してください)\n' +
       '【思い描く理想の未来像】' + futureVision + '\n\n' +
       '前置きや見出しは不要で、本文のみを出力してください。専門用語は避け、自然な話し言葉にしてください。';
 
