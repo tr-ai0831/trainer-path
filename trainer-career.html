@@ -216,9 +216,21 @@
     background:radial-gradient(circle, rgba(198,166,81,0.18) 0%, rgba(198,166,81,0) 68%);
     pointer-events:none;
   }
-  .hero{ position:relative; text-align:center; z-index:1; background-image:repeating-linear-gradient(135deg, rgba(198,166,81,0.035) 0px, rgba(198,166,81,0.035) 1px, transparent 1px, transparent 15px); }
-  .hero-emblem{ display:block; margin:0 auto 14px; }
-  .hero .hkicker{ font-size:10.5px; letter-spacing:.32em; color:var(--gold); font-weight:500; }
+  .hero{
+    position:relative; text-align:center; z-index:1;
+    background-image:
+      radial-gradient(circle at 50% 100%, transparent 20%, rgba(198,166,81,0.05) 21%, rgba(198,166,81,0.05) 24%, transparent 25%, transparent 28%, rgba(198,166,81,0.05) 29%, rgba(198,166,81,0.05) 32%, transparent 33%),
+      radial-gradient(circle at 0% 100%, transparent 20%, rgba(198,166,81,0.05) 21%, rgba(198,166,81,0.05) 24%, transparent 25%, transparent 28%, rgba(198,166,81,0.05) 29%, rgba(198,166,81,0.05) 32%, transparent 33%),
+      radial-gradient(circle at 100% 100%, transparent 20%, rgba(198,166,81,0.05) 21%, rgba(198,166,81,0.05) 24%, transparent 25%, transparent 28%, rgba(198,166,81,0.05) 29%, rgba(198,166,81,0.05) 32%, transparent 33%);
+    background-size:56px 28px;
+  }
+  .hero-emblem{ display:block; margin:0 auto 6px; }
+  .hanko{
+    width:26px; height:26px; background:#A8503E; color:#F4EFE4; display:flex; align-items:center; justify-content:center;
+    font-family:'Shippori Mincho', serif; font-weight:700; font-size:14px; margin:0 auto 14px; border-radius:3px;
+    transform:rotate(-3deg); box-shadow:0 2px 6px rgba(0,0,0,0.25);
+  }
+  .hero .hkicker{ font-size:13px; letter-spacing:.26em; color:var(--gold); font-weight:500; }
   .hero-divider{ display:flex; align-items:center; justify-content:center; gap:9px; margin:16px 0; }
   .hero-divider .hd-line{ width:32px; height:1px; background:var(--gold); opacity:.55; }
   .hero-divider .hd-diamond{ width:5px; height:5px; background:var(--gold); transform:rotate(45deg); opacity:.85; }
@@ -249,14 +261,10 @@
   <div id="heroView">
     <div class="hero-frame"><div class="hero">
       <svg class="hero-emblem" width="68" height="68" viewBox="0 0 72 72">
-        <circle cx="36" cy="36" r="34" fill="none" stroke="#C6A651" stroke-width="1"/>
-        <circle cx="36" cy="36" r="28" fill="none" stroke="#C6A651" stroke-width="0.5" opacity="0.5"/>
-        <line x1="24" y1="46" x2="24" y2="34" stroke="#C6A651" stroke-width="2"/>
-        <line x1="34" y1="46" x2="34" y2="26" stroke="#C6A651" stroke-width="2"/>
-        <line x1="44" y1="46" x2="44" y2="20" stroke="#C6A651" stroke-width="2"/>
-        <circle cx="44" cy="20" r="2.5" fill="#C6A651"/>
+        <path d="M 9.7 26.4 A 28 28 0 1 1 11.8 50" fill="none" stroke="#C6A651" stroke-width="2.6" stroke-linecap="round"/>
       </svg>
-      <span class="hkicker">TRAINER CAREER DOJO</span>
+      <div class="hanko">道</div>
+      <span class="hkicker">トレーナーキャリア道場</span>
       <div class="hero-divider"><span class="hd-line"></span><span class="hd-diamond"></span><span class="hd-line"></span></div>
       <h1>あなたの迷いに、<br>白黒をつける。<br><span class="accent">本質発見診断</span></h1>
       <p class="hsub">「知識が足りない」「環境が合わない」——そう思い込んでいるだけかもしれません。31の問いと現在地の棚卸しから、あなたの本当のボトルネックを、逃げ場なく特定します。</p>
@@ -283,7 +291,7 @@
 
   <div id="quizView" style="display:none;">
     <div class="brand">
-      <span class="kicker">TRAINER CAREER DOJO</span>
+      <span class="kicker">トレーナーキャリア道場</span>
       <h1>本質発見診断</h1>
       <div class="rule"></div>
     </div>
