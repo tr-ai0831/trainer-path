@@ -182,7 +182,7 @@
   .qual-group{ margin-bottom:16px; }
   .qual-group-title{ font-size:10px; font-weight:500; color:var(--gold); letter-spacing:.1em; text-transform:uppercase; margin-bottom:8px; }
   .qual-check{ display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--muted); padding:5px 0; cursor:pointer; }
-  .qual-check input[type="checkbox"]{ accent-color:var(--gold); width:14px; height:14px; flex-shrink:0; }
+  .qual-check input[type="checkbox"], .qual-check input[type="radio"]{ accent-color:var(--gold); width:14px; height:14px; flex-shrink:0; }
   .qual-national{ font-size:9px; font-weight:500; color:var(--gold); border:1px solid var(--gold); padding:1px 6px; border-radius:99px; margin-left:6px; letter-spacing:.03em; }
 
   .future-box{ border:1px solid var(--gold); border-radius:2px; padding:24px 22px; margin:26px 0; }
@@ -191,6 +191,10 @@
   .future-box .fnote{ font-style:normal; color:var(--muted); }
 
   .loading-spinner{ width:1px; height:40px; background:var(--gold); margin:28px auto; animation:growline 1.4s ease-in-out infinite; }
+  .aphorism-text{
+    text-align:center; font-family:'Shippori Mincho', serif; font-size:15px; color:var(--gold-soft);
+    line-height:1.9; max-width:300px; margin:24px auto 0; min-height:56px; transition:opacity .15s ease;
+  }
   @keyframes growline{ 0%,100%{ height:10px; opacity:.3; } 50%{ height:40px; opacity:1; } }
   .ai-badge{ display:inline-block; border:1px solid var(--gold); color:var(--gold); font-size:9px; font-weight:500; padding:2px 9px; border-radius:99px; vertical-align:middle; margin-left:8px; letter-spacing:.1em; }
 
@@ -954,9 +958,17 @@ function evaluateSelfCheck(){
     verdict = '正直に言います。ここまで読んで「いいこと言うな」と思っただけで、実際の行動にはほとんど移せていないようです。知識と行動の差、それがあなたの停滞の正体です。今日、チェックが付かなかった項目から1つだけ選んで、今すぐ着手してください。';
   }
 
+  const otherEl = document.getElementById('selfCheckOther');
+  const otherText = otherEl ? otherEl.value.trim() : '';
+  let otherNote = '';
+  if(otherText.length > 0){
+    otherNote = `<p>それに加えて申告してくれた独自の取り組み「${otherText}」も、立派な行動量です。ただし、具体的な頻度や量を自分で言語化できているかどうかが、継続できる人とできない人の分かれ目になります。曖昧なままにせず、数字で管理する習慣をつけてください。</p>`;
+  }
+
   resultEl.innerHTML = `
     <div class="self-check-score">${checked} / ${total} 項目 (${pct}%)</div>
     <p>${verdict}</p>
+    ${otherNote}
   `;
   resultEl.style.display = 'block';
 }
@@ -1084,6 +1096,39 @@ function renderQualificationChecklist(){
   }).join('');
 }
 
+const incomeRanges = [
+  { key:'r1', label:'200万円未満' },
+  { key:'r2', label:'200万〜399万円' },
+  { key:'r3', label:'400万〜599万円' },
+  { key:'r4', label:'600万〜799万円' },
+  { key:'r5', label:'800万〜999万円' },
+  { key:'r6', label:'1000万〜1499万円' },
+  { key:'r7', label:'1500万円以上' },
+  { key:'r8', label:'回答しない' }
+];
+function renderIncomeChecklist(){
+  return incomeRanges.map(function(r){
+    return '<label class="qual-check"><input type="radio" name="ffIncomeRange" value="' + r.key + '" data-label="' + r.label + '">' + r.label + '</label>';
+  }).join('');
+}
+
+const achievementOptions = [
+  { key:'store', label:'店舗経営・運営(オーナー・店長など)' },
+  { key:'independent', label:'独立・開業の経験がある' },
+  { key:'media', label:'メディア掲載(雑誌・TV・ラジオ・書籍など)' },
+  { key:'celebrity', label:'著名人・アスリートの指導実績' },
+  { key:'speaking', label:'講演・セミナー登壇の経験' },
+  { key:'content', label:'SNS・YouTubeなどでの発信実績' },
+  { key:'award', label:'大会・コンペでの受賞歴' },
+  { key:'mentoring', label:'後輩・部下の育成実績' },
+  { key:'none', label:'特になし' }
+];
+function renderAchievementChecklist(){
+  return achievementOptions.map(function(a){
+    return '<label class="qual-check"><input type="checkbox" name="ffAchievementCheck" value="' + a.key + '">' + a.label + '</label>';
+  }).join('');
+}
+
 function renderStep(){
   const s = flow[stepIndex];
   renderProgress();
@@ -1168,11 +1213,15 @@ function renderStep(){
       </div>
       <div class="freeform-field">
         <label>年収(目安で構いません)</label>
-        <input type="text" id="ffIncome" placeholder="例: 350万円">
+        <div class="qual-checklist">${renderIncomeChecklist()}</div>
       </div>
       <div class="freeform-field">
-        <label>今の実績(数字や具体的な成果があれば)</label>
-        <textarea id="ffAchievement" rows="3" placeholder="例: 担当顧客30名、月間売上80万円、店舗No.2の指名数"></textarea>
+        <label>今の実績(あてはまるものすべて)</label>
+        <div class="qual-checklist">${renderAchievementChecklist()}</div>
+      </div>
+      <div class="freeform-field">
+        <label>実績の詳細(具体的な数字があれば)</label>
+        <textarea id="ffAchievementDetail" rows="3" placeholder="例: 担当顧客30名、月間売上80万円、店舗No.2の指名数"></textarea>
       </div>
       <div class="freeform-field">
         <label>保有資格・学位(あてはまるものすべて)</label>
@@ -1180,7 +1229,7 @@ function renderStep(){
       </div>
       <div class="freeform-field">
         <label>その他の学位(修士・博士など、上の選択肢にない場合。分野も書いてください)</label>
-        <input type="text" id="ffOtherDegree" placeholder="例: 経営学修士(MBA)、教育学博士">
+        <input type="text" id="ffOtherDegree" placeholder="例: 教育学修士、心理学博士">
       </div>
       <div class="freeform-field">
         <label>あなたが思い描く、理想の未来像を教えてください</label>
@@ -1191,8 +1240,17 @@ function renderStep(){
     document.getElementById('nextBtn').addEventListener('click', ()=>{
       answersStore.age = document.getElementById('ffAge').value;
       answersStore.gender = document.getElementById('ffGender').value;
-      answersStore.income = document.getElementById('ffIncome').value;
-      answersStore.achievement = document.getElementById('ffAchievement').value;
+
+      const incomeChecked = document.querySelector('input[name="ffIncomeRange"]:checked');
+      answersStore.income = incomeChecked ? incomeChecked.getAttribute('data-label') : '';
+
+      const achievementChecked = Array.from(document.querySelectorAll('input[name="ffAchievementCheck"]:checked')).map(function(el){ return el.value; });
+      const achievementSelected = achievementOptions.filter(function(a){ return achievementChecked.indexOf(a.key) !== -1 && a.key !== 'none'; });
+      const achievementDetail = document.getElementById('ffAchievementDetail').value.trim();
+      const achievementParts = achievementSelected.map(function(a){ return a.label; });
+      if(achievementDetail.length > 0){ achievementParts.push(achievementDetail); }
+      answersStore.achievement = achievementParts.length > 0 ? achievementParts.join('、') : '';
+
       answersStore.otherDegree = document.getElementById('ffOtherDegree').value;
 
       const checked = Array.from(document.querySelectorAll('input[name="ffQual"]:checked')).map(function(el){ return el.value; });
@@ -1465,9 +1523,54 @@ async function renderResult(){
       console.error('AI診断コメント生成エラー:', e);
       aiFailed = true;
     }
+    stopAphorismRotation();
   }
 
   finishResultRender(coreKey, topKey, coreCluster, coreAxis, aiText, aiFailed, hasProfileData);
+}
+
+const aphorisms = [
+  '悩んでいる時間も、行動しない言い訳になる。',
+  '才能より先に、行動量が試される。',
+  '昨日と同じ自分に、明日は変えられない。',
+  '弱みは隠すものではなく、任せるものだ。',
+  '強みは、使い切って初めて磨かれる。',
+  '知っていることと、やっていることは別物だ。',
+  '言い訳の数だけ、成長は遠ざかる。',
+  '小さな一歩が、大きな停滞を破る。',
+  '本気は、時間ではなく密度で測られる。',
+  '現状維持は、後退の別名だ。',
+  '未来は、今日の行動でしか変えられない。',
+  '一人で抱えるな。頼れる強さを持て。',
+  '答えは、動いた者にしか見えてこない。',
+  '準備が完璧になる日は、永遠に来ない。',
+  '成長は、居心地の悪さの先にある。',
+  '振り返らない者に、進歩はない。',
+  '自分を甘やかす言葉に、成長は宿らない。',
+  '継続できない目標は、目標ではなく願望だ。',
+  '限界は、自分で引いた線に過ぎない。',
+  '今日動いた者だけが、明日を選べる。'
+];
+let aphorismIntervalId = null;
+function startAphorismRotation(){
+  let lastIndex = -1;
+  function pick(){
+    const el = document.getElementById('aphorismText');
+    if(!el){ stopAphorismRotation(); return; }
+    let idx;
+    do{ idx = Math.floor(Math.random() * aphorisms.length); } while(idx === lastIndex && aphorisms.length > 1);
+    lastIndex = idx;
+    el.style.opacity = '0';
+    setTimeout(function(){
+      const el2 = document.getElementById('aphorismText');
+      if(el2){ el2.textContent = aphorisms[idx]; el2.style.opacity = '1'; }
+    }, 150);
+  }
+  pick();
+  aphorismIntervalId = setInterval(pick, 3000);
+}
+function stopAphorismRotation(){
+  if(aphorismIntervalId){ clearInterval(aphorismIntervalId); aphorismIntervalId = null; }
 }
 
 function renderLoadingScreen(){
@@ -1475,7 +1578,9 @@ function renderLoadingScreen(){
     <div class="question">あなた専用の診断コメントを作成中</div>
     <p class="info-text">回答パターンと入力内容をもとに、AIがあなただけの診断コメントを考えています。少しだけお待ちください。</p>
     <div class="loading-spinner"></div>
+    <p class="aphorism-text" id="aphorismText"></p>
   `;
+  startAphorismRotation();
 }
 
 function getTopBottomLeaves(n){
@@ -1670,6 +1775,10 @@ function finishResultRender(coreKey, topKey, coreCluster, coreAxis, aiText, aiFa
       <div class="self-check-panel">
         <span class="label">追加診断 — 本当にできているか</span>
         <p class="self-check-intro">上のチェックリストで、実際にやっているものにチェックを入れてください。「知っている」と「やっている」の差を、客観的に評価します。</p>
+        <div class="freeform-field">
+          <label>リストにない取り組みがあれば(何を・どのくらいの頻度や量で行っているか、具体的に)</label>
+          <textarea id="selfCheckOther" rows="3" placeholder="例: 独自に月2回、他店舗のトレーナーと勉強会を開催している"></textarea>
+        </div>
         <button class="next-btn" id="selfCheckBtn">自己チェックを診断する</button>
         <div class="self-check-result" id="selfCheckResult" style="display:none;"></div>
       </div>
