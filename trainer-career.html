@@ -78,6 +78,13 @@
     text-align:center; margin:6px 0 22px; line-height:1.5; color:var(--ivory);
   }
   .start-point{ text-align:center; font-size:11.5px; color:var(--muted); margin-bottom:20px; letter-spacing:.03em; }
+
+  .type-reveal{ text-align:center; border:1px solid var(--gold); border-radius:2px; padding:26px 20px; margin:6px 0 28px; position:relative; }
+  .type-reveal::before{ content:''; position:absolute; inset:5px; border:1px solid rgba(198,166,81,0.28); pointer-events:none; }
+  .type-kicker{ font-size:10px; letter-spacing:.28em; color:var(--gold); font-weight:500; margin-bottom:12px; }
+  .type-name{ font-family:'Shippori Mincho', serif; font-weight:600; font-size:24px; color:var(--ivory); margin-bottom:4px; }
+  .type-sub{ font-size:11px; color:var(--gold); letter-spacing:.1em; font-family:'Noto Sans JP', sans-serif; }
+  .type-desc{ font-size:12.5px; line-height:1.95; color:var(--muted); max-width:340px; margin:14px auto 0; }
   .start-point b{ color:var(--gold-soft); font-weight:500; }
 
   .radar-section{ margin:6px 0 26px; }
@@ -143,10 +150,18 @@
   .tool-howto{ font-size:12px; line-height:1.8; color:var(--muted); margin:0; }
   .check-label{ font-size:9.5px; font-weight:500; color:var(--gold); letter-spacing:.1em; margin:10px 0 5px; text-transform:uppercase; }
   .check-list{ margin:0; padding:0; list-style:none; }
-  .check-item{ font-size:11px; line-height:1.8; color:var(--muted); padding-left:14px; position:relative; margin-bottom:4px; }
-  .check-item::before{ content:'□'; position:absolute; left:0; color:var(--gold); }
+  .check-item{ margin-bottom:6px; }
+  .check-real{ display:flex; align-items:flex-start; gap:8px; font-size:11px; line-height:1.8; color:var(--muted); cursor:pointer; }
+  .check-real input[type="checkbox"]{ accent-color:var(--gold); width:13px; height:13px; margin-top:2px; flex-shrink:0; cursor:pointer; }
+  .check-real input[type="checkbox"]:checked ~ *{ color:var(--ivory); }
   .universal-box{ border-top:1px solid var(--line); padding:22px 0; }
   .universal-box .label{ font-size:10px; font-weight:500; color:var(--sage); letter-spacing:.16em; margin-bottom:14px; display:block; text-transform:uppercase; }
+  .self-check-panel{ border-top:1px solid var(--line); padding:22px 0; }
+  .self-check-panel .label{ font-size:10px; font-weight:500; color:var(--brick); letter-spacing:.16em; margin-bottom:10px; display:block; text-transform:uppercase; }
+  .self-check-intro{ font-size:12px; line-height:1.8; color:var(--muted); margin:0 0 16px; }
+  .self-check-result{ margin-top:18px; border:1px solid var(--brick); border-radius:2px; padding:18px; }
+  .self-check-score{ font-family:'Shippori Mincho', serif; font-size:20px; color:var(--ivory); font-weight:600; margin-bottom:10px; text-align:center; }
+  .self-check-result p{ margin:0; font-size:12.5px; line-height:1.9; color:var(--muted); }
 
   .objectivity-box{
     border-top:1px solid var(--line); padding:24px 0 4px; margin-top:6px; }
@@ -824,6 +839,26 @@ const leafActions = {
 };
 
 const clusterLabels = { jiatama:'地頭', competency:'対人・対自己・対課題', expertise:'専門力', belief:'価値観信念', adaptation:'環境適応' };
+
+const typeArchetypes = {
+  jiatama: { name:'ストラテジスト型', sub:'THE STRATEGIST',
+    desc:'複雑な情報を整理し、筋道を立てて考える力に長けたタイプです。感覚や勢いより、論理と設計図を重視し、判断の一貫性で周囲から信頼を得ます。' },
+  competency: { name:'コネクター型', sub:'THE CONNECTOR',
+    desc:'人と人、人と課題をつなぎ、チームを前に動かす力に長けたタイプです。一人の成果より、周りを巻き込んだ成果を得意とします。' },
+  expertise: { name:'クラフツマン型', sub:'THE CRAFTSMAN',
+    desc:'技術と知識を磨き込み、専門性で信頼を積み上げるタイプです。派手さより確かさを積み重ね、現場での実力がものを言います。' },
+  belief: { name:'ビジョナリー型', sub:'THE VISIONARY',
+    desc:'自分の価値観や原体験を軸に動く、内面の強さを持つタイプです。他人の基準ではなく、自分の物語で生きようとします。' },
+  adaptation: { name:'パイオニア型', sub:'THE PIONEER',
+    desc:'危機感と好奇心を燃料に、前へ前へと進み続けるタイプです。現状維持を嫌い、常に次の景色を求めます。' }
+};
+function getDominantCluster(clusterAvg){
+  let dominant = 'jiatama';
+  let max = -Infinity;
+  Object.keys(clusterAvg).forEach(function(k){ if(clusterAvg[k] > max){ max = clusterAvg[k]; dominant = k; } });
+  return dominant;
+}
+
 const clusterTools = {
   jiatama: [
     { name:'Blog・SNS発信', howto:'学んだことや気づきを、週1回でいいので短い文章でSNSに投稿してみましょう。人に説明するつもりで書くと、自分の理解の甘い部分が見えてきます。',
@@ -895,12 +930,37 @@ const universalTools = [
 function renderToolList(tools){
   return '<ul class="tool-list">' + tools.map(function(t){
     const checksHtml = t.checks ? ('<ul class="check-list">' + t.checks.map(function(c){
-      return '<li class="check-item">' + c + '</li>';
+      return '<li class="check-item"><label class="check-real"><input type="checkbox" class="self-check-box">' + c + '</label></li>';
     }).join('') + '</ul>') : '';
     return '<li class="tool-item"><span class="tool-name">' + t.name + '</span><p class="tool-howto">' + t.howto + '</p>'
       + '<div class="check-label">本当にできている？ 自己チェック</div>' + checksHtml + '</li>';
   }).join('') + '</ul>';
 }
+
+function evaluateSelfCheck(){
+  const boxes = document.querySelectorAll('.self-check-box');
+  const total = boxes.length;
+  const checked = Array.from(boxes).filter(function(b){ return b.checked; }).length;
+  const pct = total > 0 ? Math.round((checked / total) * 100) : 0;
+  const resultEl = document.getElementById('selfCheckResult');
+  if(!resultEl){ return; }
+
+  let verdict = '';
+  if(pct >= 80){
+    verdict = '有言実行できている人です。ここまでの実行率は、正直言って稀です。「知っている」で終わらせず「やっている」まで持っていけているのは、大きな強みです。この調子を落とさず継続してください。';
+  } else if(pct >= 50){
+    verdict = '半分程度は実行できていますが、「知っている」と「本当にやっている」の間には、まだ差があります。チェックが付かなかった項目の中から、今週中に1つだけ着手してください。全部を一度にやろうとしないことが、続けるコツです。';
+  } else {
+    verdict = '正直に言います。ここまで読んで「いいこと言うな」と思っただけで、実際の行動にはほとんど移せていないようです。知識と行動の差、それがあなたの停滞の正体です。今日、チェックが付かなかった項目から1つだけ選んで、今すぐ着手してください。';
+  }
+
+  resultEl.innerHTML = `
+    <div class="self-check-score">${checked} / ${total} 項目 (${pct}%)</div>
+    <p>${verdict}</p>
+  `;
+  resultEl.style.display = 'block';
+}
+
 
 const treeStructure = [
   { label:'Value', axisClass:'value', children: [
@@ -1435,11 +1495,14 @@ async function fetchPersonalizedAdvice(topKey, coreKey, coreAxis){
   const tb = getTopBottomLeaves(3);
   const clusterAvg = computeClusterAverages();
   const clusterSummary = 'jiatama(地頭)=' + clusterAvg.jiatama.toFixed(1) + '/5, competency(対人対自己対課題)=' + clusterAvg.competency.toFixed(1) + '/5, expertise(専門力)=' + clusterAvg.expertise.toFixed(1) + '/5, belief(価値観信念)=' + clusterAvg.belief.toFixed(1) + '/5, adaptation(環境適応)=' + clusterAvg.adaptation.toFixed(1) + '/5';
+  const dominantCluster = getDominantCluster(clusterAvg);
+  const typeName = typeArchetypes[dominantCluster].name + '(' + typeArchetypes[dominantCluster].sub + ')';
 
   const sharedFields = {
     topLabel: topLabel,
     coreLabel: coreLabel,
     strategyNote: strategyNote,
+    typeName: typeName,
     topLeaves: tb.top.join('、'),
     bottomLeaves: tb.bottom.join('、'),
     clusterSummary: clusterSummary,
@@ -1497,7 +1560,7 @@ async function fetchPersonalizedAdvice(topKey, coreKey, coreAxis){
 
 function buildComprehensivePrompt(f){
   return 'あなたは、パーソナルトレーナーのキャリアを本気で考える、鋭い洞察力を持つコーチです。以下の情報をもとに、日本語で3段落構成の診断コメントを書いてください。\n\n'
-    + '【1段落目】回答パターンから読み取れる、この人の性格・行動特性の核心を言い当ててください。「あなたは〜というところがあります」という形で、読んだ本人が「確かに当たっている」と感じるような、具体的で的確な洞察にしてください。一般論ではなく、下記の「特に高いスコアの項目」「特に低いスコアの項目」を根拠に、なぜそう言えるのかが伝わるように書いてください。\n\n'
+    + '【1段落目】回答パターンから読み取れる、この人の性格・行動特性の核心を言い当ててください。この人は診断上「' + f.typeName + '」というタイプに分類されています。「あなたは〜というところがあります」という形で、読んだ本人が「確かに当たっている」と感じるような、具体的で的確な洞察にしてください。一般論ではなく、下記の「特に高いスコアの項目」「特に低いスコアの項目」を根拠に、なぜそう言えるのか、そしてなぜこのタイプに当てはまるのかが伝わるように書いてください。\n\n'
     + '【2段落目】年齢・年収・実績・資格を、必ず1つずつ具体的に取り上げて評価してください。良い点は良いと明確に認め、物足りない点は物足りないとはっきり指摘してください。実績や資格が充実している場合は、その水準の高さを正当に評価した上で、それでもなお伸ばすべき点を指摘してください。逆に乏しい場合は、率直に指摘してください。全体として、この年齢・実績にふさわしいレベルにあるかを、辛口かつ公正に評価してください。「無理」「一生」など、可能性を完全に否定する断定表現は使わないでください。もし「その他の学位」が記入されている場合は、その専門性を今のキャリアにどう活かせるか、具体的なヒントを必ず1つ盛り込んでください。\n\n'
     + '【3段落目】上記を踏まえ、本人が思い描く未来像に対して、強みがどう追い風になるか、弱点や現在地とどう向き合うべきかを、具体的な行動とともに述べてください。\n\n'
     + '【診断で分かった特に高いスコアの項目(上位3つ)】' + f.topLeaves + '\n'
@@ -1530,6 +1593,8 @@ function finishResultRender(coreKey, topKey, coreCluster, coreAxis, aiText, aiFa
     : buildWeaknessProseVision(coreKey);
   const clusterAvg = computeClusterAverages();
   const radarSVG = buildRadarSVG(clusterAvg);
+  const dominantCluster = getDominantCluster(clusterAvg);
+  const type = typeArchetypes[dominantCluster];
 
   let aiReportHtml = '';
   if(hasProfileData){
@@ -1550,6 +1615,14 @@ function finishResultRender(coreKey, topKey, coreCluster, coreAxis, aiText, aiFa
   card.innerHTML = `
     <div class="result">
       <div class="start-point">最初の入口 — <b>${answersStore.concernLabel}</b> ／ 理想 — <b>${answersStore.idealLabel}</b></div>
+
+      <div class="type-reveal">
+        <div class="type-kicker">YOUR TYPE</div>
+        <div class="type-name">${type.name}</div>
+        <div class="type-sub">— ${type.sub} —</div>
+        <p class="type-desc">${type.desc}</p>
+      </div>
+
       <h2>${r.title}</h2>
 
       <div class="radar-section">
@@ -1594,6 +1667,13 @@ function finishResultRender(coreKey, topKey, coreCluster, coreAxis, aiText, aiFa
         ${renderToolList(universalTools)}
       </div>
 
+      <div class="self-check-panel">
+        <span class="label">追加診断 — 本当にできているか</span>
+        <p class="self-check-intro">上のチェックリストで、実際にやっているものにチェックを入れてください。「知っている」と「やっている」の差を、客観的に評価します。</p>
+        <button class="next-btn" id="selfCheckBtn">自己チェックを診断する</button>
+        <div class="self-check-result" id="selfCheckResult" style="display:none;"></div>
+      </div>
+
       <div class="objectivity-box">
         <div class="otitle">最後に — この結果をもっと正確にするために</div>
         <p>この診断は「自分で自分を採点する」自己評価です。とても大事な一歩ですが、限界もあります。心理学には「ジョハリの窓」という考え方があり、自分では気づいていないのに周りにはよく見えている部分(盲点)が、誰にでもあるとされています。自分の顔を鏡なしでは見られないのと同じで、自分の得意・不得意も、自分の目だけでは見えない部分があるのです。</p>
@@ -1603,6 +1683,7 @@ function finishResultRender(coreKey, topKey, coreCluster, coreAxis, aiText, aiFa
       <button class="restart" id="restart">もう一度診断する</button>
     </div>
   `;
+  document.getElementById('selfCheckBtn').addEventListener('click', evaluateSelfCheck);
   document.getElementById('restart').addEventListener('click', ()=>{
     stepIndex = 0;
     Object.keys(answersStore).forEach(k=> delete answersStore[k]);
