@@ -152,6 +152,13 @@
   .freeform-field input:focus, .freeform-field select:focus, .freeform-field textarea:focus{ outline:none; border-bottom-color:var(--gold); }
   .freeform-field textarea{ resize:vertical; }
 
+  .qual-checklist{ margin-top:4px; }
+  .qual-group{ margin-bottom:16px; }
+  .qual-group-title{ font-size:10px; font-weight:500; color:var(--gold); letter-spacing:.1em; text-transform:uppercase; margin-bottom:8px; }
+  .qual-check{ display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--muted); padding:5px 0; cursor:pointer; }
+  .qual-check input[type="checkbox"]{ accent-color:var(--gold); width:14px; height:14px; flex-shrink:0; }
+  .qual-national{ font-size:9px; font-weight:500; color:var(--gold); border:1px solid var(--gold); padding:1px 6px; border-radius:99px; margin-left:6px; letter-spacing:.03em; }
+
   .future-box{ border:1px solid var(--gold); border-radius:2px; padding:24px 22px; margin:26px 0; }
   .future-box .ftitle{ font-family:'Shippori Mincho', serif; font-size:15px; font-weight:600; color:var(--gold); margin-bottom:14px; }
   .future-box p{ margin:0 0 12px; font-size:13px; line-height:2; color:var(--gold-soft); font-style:italic; }
@@ -805,6 +812,54 @@ function goNext(){
   if(stepIndex < flow.length){ renderStep(); } else { renderResult(); }
 }
 
+const qualificationOptions = [
+  { group:'国家資格(医療・リハビリ系)', items:[
+    { key:'pt', label:'理学療法士(PT)', national:true },
+    { key:'judo', label:'柔道整復師', national:true },
+    { key:'anma', label:'あん摩マッサージ指圧師', national:true },
+    { key:'acupuncture', label:'鍼灸師', national:true },
+    { key:'dietitian', label:'管理栄養士', national:true },
+    { key:'nurse', label:'看護師', national:true },
+    { key:'doctor', label:'医師', national:true }
+  ]},
+  { group:'公的資格・旧厚労省認定事業', items:[
+    { key:'kenko_shidoshi', label:'健康運動指導士', national:false },
+    { key:'kenko_jissen', label:'健康運動実践指導者', national:false }
+  ]},
+  { group:'民間資格(トレーニング・S&C系)', items:[
+    { key:'nsca_cpt', label:'NSCA-CPT', national:false },
+    { key:'nsca_cscs', label:'NSCA-CSCS', national:false },
+    { key:'nesta', label:'NESTA-PFT', national:false },
+    { key:'jati', label:'JATI-ATI', national:false },
+    { key:'acsm', label:'ACSM-CPT / EP', national:false },
+    { key:'ace', label:'ACE-CPT', national:false },
+    { key:'jspo', label:'JSPO公認スポーツ指導者', national:false }
+  ]},
+  { group:'民間資格(ピラティス・ヨガ系)', items:[
+    { key:'pilates', label:'ピラティス指導者資格', national:false },
+    { key:'yoga', label:'ヨガインストラクター資格', national:false }
+  ]},
+  { group:'学位', items:[
+    { key:'deg_sport', label:'体育・スポーツ科学系 学士', national:false },
+    { key:'deg_nutrition', label:'栄養学系 学士', national:false },
+    { key:'deg_medical', label:'医療・リハビリ系 学士', national:false },
+    { key:'deg_other', label:'その他分野 学士', national:false },
+    { key:'deg_master', label:'修士・博士(スポーツ・医学・栄養系)', national:false }
+  ]},
+  { group:'その他', items:[
+    { key:'none', label:'特になし', national:false }
+  ]}
+];
+function renderQualificationChecklist(){
+  return qualificationOptions.map(function(g){
+    const items = g.items.map(function(it){
+      const natTag = it.national ? '<span class="qual-national">国家資格</span>' : '';
+      return '<label class="qual-check"><input type="checkbox" name="ffQual" value="' + it.key + '">' + it.label + natTag + '</label>';
+    }).join('');
+    return '<div class="qual-group"><div class="qual-group-title">' + g.group + '</div>' + items + '</div>';
+  }).join('');
+}
+
 function renderStep(){
   const s = flow[stepIndex];
   renderProgress();
@@ -896,8 +951,8 @@ function renderStep(){
         <textarea id="ffAchievement" rows="3" placeholder="例: 担当顧客30名、月間売上80万円、店舗No.2の指名数"></textarea>
       </div>
       <div class="freeform-field">
-        <label>保有資格</label>
-        <input type="text" id="ffQualification" placeholder="例: NSCA-CPT、栄養士">
+        <label>保有資格・学位(あてはまるものすべて)</label>
+        <div class="qual-checklist">${renderQualificationChecklist()}</div>
       </div>
       <div class="freeform-field">
         <label>あなたが思い描く、理想の未来像を教えてください</label>
@@ -910,7 +965,13 @@ function renderStep(){
       answersStore.gender = document.getElementById('ffGender').value;
       answersStore.income = document.getElementById('ffIncome').value;
       answersStore.achievement = document.getElementById('ffAchievement').value;
-      answersStore.qualification = document.getElementById('ffQualification').value;
+
+      const checked = Array.from(document.querySelectorAll('input[name="ffQual"]:checked')).map(function(el){ return el.value; });
+      const allItems = qualificationOptions.reduce(function(acc, g){ return acc.concat(g.items); }, []);
+      const selected = allItems.filter(function(it){ return checked.indexOf(it.key) !== -1 && it.key !== 'none'; });
+      answersStore.qualification = selected.length > 0 ? selected.map(function(it){ return it.label; }).join('、') : '特になし';
+      answersStore.hasNationalQualification = selected.some(function(it){ return it.national; });
+
       answersStore.futureVision = document.getElementById('ffFuture').value;
       goNext();
     });
@@ -1157,6 +1218,7 @@ async function renderResult(){
     try{
       aiText = await fetchPersonalizedAdvice(topKey, coreKey, coreAxis);
     } catch(e){
+      console.error('AI診断コメント生成エラー:', e);
       aiFailed = true;
     }
   }
@@ -1208,6 +1270,7 @@ async function fetchPersonalizedAdvice(topKey, coreKey, coreAxis){
     income: answersStore.income || '未回答',
     achievement: answersStore.achievement || '未回答',
     qualification: answersStore.qualification || '未回答',
+    hasNationalQualification: answersStore.hasNationalQualification ? 'あり(国家資格保有)' : 'なし',
     futureVision: (answersStore.futureVision && answersStore.futureVision.trim().length > 0) ? answersStore.futureVision : '未回答'
   };
 
@@ -1232,7 +1295,14 @@ async function fetchPersonalizedAdvice(topKey, coreKey, coreAxis){
         messages: [{ role: "user", content: prompt }]
       })
     });
+    if(!response.ok){
+      const errBody = await response.text().catch(function(){ return ''; });
+      throw new Error('direct API call failed (status ' + response.status + '): ' + errBody);
+    }
     const data = await response.json();
+    if(!data.content || !Array.isArray(data.content)){
+      throw new Error('unexpected API response shape: ' + JSON.stringify(data).slice(0, 200));
+    }
     const text = data.content.map(function(item){ return item.type === "text" ? item.text : ""; }).filter(Boolean).join("\n");
     const trimmed = text.trim();
     if(!trimmed){ throw new Error('empty response'); }
@@ -1260,6 +1330,7 @@ function buildComprehensivePrompt(f){
     + '【年収】' + f.income + '\n'
     + '【実績】' + f.achievement + '\n'
     + '【資格】' + f.qualification + '\n'
+    + '【国家資格の保有】' + f.hasNationalQualification + '(国家資格を持っている場合は、その専門性と信頼性を高く評価してください。民間資格のみ、または資格なしの場合は、その点も踏まえて評価してください)\n'
     + '【思い描く理想の未来像】' + f.futureVision + '\n\n'
     + '前置きや見出しは不要で、本文のみを出力してください。専門用語は避け、自然な話し言葉にしてください。';
 }
